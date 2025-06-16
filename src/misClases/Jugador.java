@@ -19,6 +19,10 @@ public class Jugador extends Conexion{
     Scanner sc = new Scanner(System.in);//Variable para capturar las respuestas
     //Constructor
     public Jugador() throws IOException{super("cliente");}
+    //constructor que recibe la IP
+    public Jugador(String ipServidor) throws IOException{
+        super("cliente",ipServidor);
+    }
     
     //Metodo para iniciar al jugador
     public void startJugador(){
