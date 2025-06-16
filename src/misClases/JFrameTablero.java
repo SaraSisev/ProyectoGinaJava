@@ -62,7 +62,9 @@ public class JFrameTablero extends javax.swing.JFrame {
     public void iniciarJugador(){
         new Thread(() -> {//permite ejecutar el codigo en paralelo sin bloquearme la interfaz
             try {
-                Jugador jugador = new Jugador();// se instancia una variable tipo jugador
+                //se pide la ip del servidor 
+                String ipServidor = JOptionPane.showInputDialog("Introduce la IP del servidor");
+                Jugador jugador = new Jugador(ipServidor);// se instancia una variable tipo jugador
                 System.out.println("Iniciando como jugador");
                 jugador.startJugador();
             } catch (IOException ex) {
