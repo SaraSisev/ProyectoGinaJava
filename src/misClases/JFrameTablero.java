@@ -19,6 +19,7 @@ public class JFrameTablero extends javax.swing.JFrame {
     //atributos para recibir datos de otros JFrames
     private String nombre;//recibe los nombres del jugador
     private String tipo;//recibe si el jugador es normal o jugador-servidor
+
     //atributos para el aspecto de tiempo transcurrido en la pantalla
     private Timer timer;
     private int minutos;
@@ -29,17 +30,19 @@ public class JFrameTablero extends javax.swing.JFrame {
      */
     public JFrameTablero() {
         initComponents();
+        
     }
     //constructor que recibe el nombre y tipo de jugador desde el frame principal
     public JFrameTablero(String nombre, String tipo){
         initComponents();
         this.tipo=tipo;
         this.nombre=nombre;
-        iniciarTiempoJuego();
+        //iniciarTiempoJuego();
         //condicional para verificar que tipo de jugador es
         if(tipo.equals("servidor")){
             //si es el servidor iniciara el servidor con ese metodo
             iniciarServidor();
+            //iniciarTiempoJuego();
         }else{
             //sino sera el jugador y se iniciara como tal
             iniciarJugador();
@@ -48,9 +51,12 @@ public class JFrameTablero extends javax.swing.JFrame {
     public void iniciarServidor(){
         new Thread(() -> {//permite ejecutar el codigo en paralelo sin bloquearme la interfaz
             try {
-                Servidor server = new Servidor();//se instancia una variable tipo servidor
+                Servidor server = new Servidor(this);//se instancia una variable tipo servidor
                 System.out.println("Iniciando servidor del juego");
                 server.startServer();
+                conexionLista();
+
+                        
             } catch (IOException ex) {
                 SwingUtilities.invokeLater(() ->
                     JOptionPane.showMessageDialog(null, "Error al iniciar el servidor")
@@ -66,7 +72,9 @@ public class JFrameTablero extends javax.swing.JFrame {
                 String ipServidor = JOptionPane.showInputDialog("Introduce la IP del servidor");
                 Jugador jugador = new Jugador(ipServidor);// se instancia una variable tipo jugador
                 System.out.println("Iniciando como jugador");
+                SwingUtilities.invokeLater(this::iniciarTiempoJuego);
                 jugador.startJugador();
+                
             } catch (IOException ex) {
                 SwingUtilities.invokeLater(() ->
                     JOptionPane.showMessageDialog(null, "Error al iniciar como jugador")
@@ -75,6 +83,7 @@ public class JFrameTablero extends javax.swing.JFrame {
             }
         }).start();//inicio de un hilo para evitar el congelamiento de la interfaz grafica
     }
+    
     private void iniciarTiempoJuego(){
         timer = new Timer(1000, new ActionListener(){
                 public void actionPerformed(ActionEvent e){
@@ -88,7 +97,11 @@ public class JFrameTablero extends javax.swing.JFrame {
                 });
         timer.start();
     }
-        
+    public void conexionLista(){
+        SwingUtilities.invokeLater(this::iniciarTiempoJuego);
+    }
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
