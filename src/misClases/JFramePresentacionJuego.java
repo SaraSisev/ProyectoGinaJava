@@ -34,6 +34,7 @@ public class JFramePresentacionJuego extends javax.swing.JFrame {
         jPanelPresentacionJuego = new javax.swing.JPanel();
         jButtonServidor = new javax.swing.JButton();
         jButtonJugador = new javax.swing.JButton();
+        jButtonInstrucciones = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -51,6 +52,13 @@ public class JFramePresentacionJuego extends javax.swing.JFrame {
             }
         });
 
+        jButtonInstrucciones.setText("Instrucciones");
+        jButtonInstrucciones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonInstruccionesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelPresentacionJuegoLayout = new javax.swing.GroupLayout(jPanelPresentacionJuego);
         jPanelPresentacionJuego.setLayout(jPanelPresentacionJuegoLayout);
         jPanelPresentacionJuegoLayout.setHorizontalGroup(
@@ -61,11 +69,17 @@ public class JFramePresentacionJuego extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
                 .addComponent(jButtonJugador)
                 .addGap(95, 95, 95))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPresentacionJuegoLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonInstrucciones)
+                .addGap(15, 15, 15))
         );
         jPanelPresentacionJuegoLayout.setVerticalGroup(
             jPanelPresentacionJuegoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPresentacionJuegoLayout.createSequentialGroup()
-                .addContainerGap(235, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jButtonInstrucciones)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 206, Short.MAX_VALUE)
                 .addGroup(jPanelPresentacionJuegoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonServidor)
                     .addComponent(jButtonJugador))
@@ -122,6 +136,14 @@ public class JFramePresentacionJuego extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonJugadorActionPerformed
 
+    private void jButtonInstruccionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInstruccionesActionPerformed
+        // TODO add your handling code here:
+        JFrameInstrucciones instrucciones = new JFrameInstrucciones();
+        instrucciones.setSize(600, 500);
+        instrucciones.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButtonInstruccionesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -158,6 +180,7 @@ public class JFramePresentacionJuego extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonInstrucciones;
     private javax.swing.JButton jButtonJugador;
     private javax.swing.JButton jButtonServidor;
     private javax.swing.JPanel jPanelPresentacionJuego;
