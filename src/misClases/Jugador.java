@@ -9,6 +9,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Scanner;
 import misClases.Conexion;
+
 /**
  *
  * @author Eliba
@@ -17,36 +18,32 @@ import misClases.Conexion;
 public class Jugador extends Conexion{
     boolean jugando = true;//Bandera que representa que el jugador sigue jugando y asi siga mandando mensajes al servidor
     Scanner sc = new Scanner(System.in);//Variable para capturar las respuestas
-    //Constructor
+    //variable para pasar la informacion al frame del chat
+    private JFrameChat frame;     
+//Constructor
     public Jugador() throws IOException{super("cliente");}
+    //constructor que recibe la IP y el frame de chat para abrir
+    public Jugador(String ipServidor, JFrameChat frame) throws IOException{
+        super("cliente",ipServidor);
+        this.frame = frame;
+    }
+   
     
     //Metodo para iniciar al jugador
-    public void startJugador(){
-        try{
-           //flujo de datos hacia el servidor
-           salidaServidor = new DataOutputStream(cs.getOutputStream());
-           entradaServidor = new DataInputStream(cs.getInputStream());
-           //ciclo que se repite hasta que no haya flujo de datos(hasta que acabe el juego)
-           while(jugando){
-              System.out.print("Tu pregunta o adivinanza: ");
-              String mensaje = sc.nextLine();
-
-              // enviar mensaje al servidor
-              salidaServidor.writeUTF(mensaje);
-
-              // recibir respuesta del servidor
-              String respuesta = entradaServidor.readUTF();
-              System.out.println("Servidor dice: " + respuesta);
-
-              // lógica de fin de juego
-              if (respuesta.equalsIgnoreCase("¡Correcto!") || respuesta.equalsIgnoreCase("Fin del juego")) {
-                    jugando = false; 
-              }
-           }
-           //cs.close();
-        }catch(IOException e){
-            System.out.println(e.getMessage());
-        }  
+    public void startJugador() throws IOException{
+        this.frame.setSalida(new DataOutputStream(cs.getOutputStream()));
+           new Thread(() -> {
+            try {
+                DataInputStream entrada = new DataInputStream(cs.getInputStream());
+                while (true) {
+                    String mensaje = entrada.readUTF();
+                    frame.mostrarMensaje("Servidor: " + mensaje);
+                }
+            } catch (IOException e) {
+                frame.mostrarMensaje("Error en conexión");
+            }
+        }).start();
     }
+    
 
 }

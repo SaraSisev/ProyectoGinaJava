@@ -16,7 +16,7 @@ import java.net.Socket;
 public class Conexion {
     //atributos final para definir que no sean modificados, esos son de ley
     private final int puerto = 54321;//Puerto que utilizaremos para realizar la conexion
-    private final String host = "172.16.127.208";//Host para nuestra conexion
+    protected String host = "172.16.152.232";//Host para nuestra conexion
     protected String mensajeServidor;//Mensajes de entrada (recibidios) en el servidor
     //Sera el puerto de escucha de nuestro servidor
     protected ServerSocket ss;//Socket del servidor 
@@ -36,4 +36,16 @@ public class Conexion {
             cs = new Socket(host, puerto);//instancia de nuestro socket para el cliente en caso de localhost 
         }
     }
+
+    //constructor para cliente que recibe IP dinamicamente
+    public Conexion(String tipo, String host) throws IOException {
+        this.host = host;
+        if(tipo.equalsIgnoreCase("cliente")){
+            cs = new Socket(host, puerto);
+        } else if(tipo.equalsIgnoreCase("servidor")){
+            ss=new ServerSocket(puerto);
+            cs=new Socket();
+        }
+    }
+    
 }

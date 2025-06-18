@@ -5,6 +5,7 @@
 package misClases;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,27 +15,39 @@ import misClases.Conexion;
  * @author Eliba
  */
 public class Servidor extends Conexion{//Se hereda de conexion para el uso de sokcets y generar el  ambiente de servidor
-    public Servidor() throws IOException{super("servidor");}//Se usa el consutructor de la clase padre
+    private JFrameTablero frame;
+    private JFrameChat frame2;//variable temporal
+    //constructor para que se pueda ejecutar un metodo, ya que startserver como tal no acaba
+    public Servidor(JFrameTablero frame, JFrameChat frame2) throws IOException{
+        super("servidor");
+        this.frame = frame;
+        this.frame2 = frame2;
+    }
     public void startServer(){//Metodo para iniciar el servidor
         try{
             System.out.println("Esperando..");//se espera la conexion
             cs=ss.accept();//comienza el socket y espera una conexion desde el cliente
             System.out.println("Cliente en linea");
-            //se obtiene el flujo de salida del cliente
-            salidaCliente = new DataOutputStream(cs.getOutputStream());
-            //se le envia un mensaje al cliente usando su flujo de salida
-            salidaCliente.writeUTF("Peticion recibida y aceptada");
-            //se obtiene el  flujo entrante desde el cliente
-            BufferedReader entrada = new BufferedReader(new InputStreamReader(cs.getInputStream()));
-            //ciclo que esta mientras haya mensajes desde el cliente
-            while((mensajeServidor = entrada.readLine()) != null){
-                //se muestra por pantalla el mensaje recibido
-                System.out.println(mensajeServidor);
+            if(frame!=null){
+                frame.conexionLista();
             }
-            System.out.println("Fin de la conexion");
-            ss.close();//finaliza la conexion entre ambas compus
+            salidaCliente = new DataOutputStream(cs.getOutputStream());
+            entradaJugador = new DataInputStream(cs.getInputStream());
+            //enviar flujo de salida al JFrame
+            frame2.setSalida(salidaCliente);
+            new Thread(() -> {
+                try{
+                    while(true){
+                        String mensaje = entradaJugador.readUTF();
+                        frame2.mostrarMensaje("Jugador: " + mensaje);
+                    }
+                }catch(IOException e){
+                    frame2.mostrarMensaje("Conexion al iniciar servidor");
+                }
+            }).start();
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
     }
+    
 }
