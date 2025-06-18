@@ -1,25 +1,51 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
+
 package misClases;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 import misClases.Servidor;
 import misClases.Jugador;
-import javax.swing.JOptionPane;
+import misClases.FondoPanel;
+import misClases.ControlMusica;
 
-/**
- *
- * @author Eliba
- */
-public class JFramePresentacionJuego extends javax.swing.JFrame {
 
-    /**
-     * Creates new form JFramePresentacionJuego
-     */
+public class JFramePresentacionJuego extends javax.swing.JFrame {  
+    FondoPanel fondo = new FondoPanel("/misClases/recursos/portada2.jpg");
+    private Clip clip;
+    private boolean musicaPausada = false;
+    private long posicionClip = 0;
+    private boolean reproduciendo = true;
+
     public JFramePresentacionJuego() {
+        this.setContentPane(fondo);
         initComponents();
+
+        //this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        cambiarIcono(jButtonInstrucciones, "/misClases/recursos/information.png");
+        cambiarIcono(jButton1, ControlMusica.estaPausada()
+            ? "/misClases/recursos/playBtn.png"
+            : "/misClases/recursos/pauseBtn.png");
+
+        if (!ControlMusica.estaPausada()) {
+            ControlMusica.iniciarMusica("/misClases/recursos/MusicaInicio.wav");
+        }
+
     }
 
     /**
@@ -31,31 +57,53 @@ public class JFramePresentacionJuego extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanelPresentacionJuego = new javax.swing.JPanel();
+        jPanelPresentacionJuego = new FondoPanel("/misClases/recursos/portada2.jpg");
         jButtonServidor = new javax.swing.JButton();
         jButtonJugador = new javax.swing.JButton();
         jButtonInstrucciones = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
 
+        jButtonServidor.setBackground(new java.awt.Color(83, 162, 198));
+        jButtonServidor.setFont(new java.awt.Font("Tempus Sans ITC", 1, 18)); // NOI18N
         jButtonServidor.setText("Servidor");
+        jButtonServidor.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.black, java.awt.Color.black));
         jButtonServidor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonServidorActionPerformed(evt);
             }
         });
 
+        jButtonJugador.setBackground(new java.awt.Color(83, 162, 198));
+        jButtonJugador.setFont(new java.awt.Font("Tempus Sans ITC", 1, 18)); // NOI18N
         jButtonJugador.setText("Jugador");
+        jButtonJugador.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.black, java.awt.Color.black));
         jButtonJugador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonJugadorActionPerformed(evt);
             }
         });
 
-        jButtonInstrucciones.setText("Instrucciones");
+        jButtonInstrucciones.setIcon(new javax.swing.ImageIcon(getClass().getResource("/misClases/recursos/information.png"))); // NOI18N
+        jButtonInstrucciones.setBorderPainted(false);
+        jButtonInstrucciones.setContentAreaFilled(false);
+        jButtonInstrucciones.setFocusPainted(false);
         jButtonInstrucciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonInstruccionesActionPerformed(evt);
+            }
+        });
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/misClases/recursos/pauseBtn.png"))); // NOI18N
+        jButton1.setBorderPainted(false);
+        jButton1.setContentAreaFilled(false);
+        jButton1.setFocusPainted(false);
+        jButton1.setPreferredSize(new java.awt.Dimension(520, 520));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -64,43 +112,41 @@ public class JFramePresentacionJuego extends javax.swing.JFrame {
         jPanelPresentacionJuegoLayout.setHorizontalGroup(
             jPanelPresentacionJuegoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPresentacionJuegoLayout.createSequentialGroup()
-                .addGap(62, 62, 62)
-                .addComponent(jButtonServidor)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
-                .addComponent(jButtonJugador)
-                .addGap(95, 95, 95))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPresentacionJuegoLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonInstrucciones)
-                .addGap(15, 15, 15))
+                .addGap(165, 165, 165)
+                .addComponent(jButtonServidor, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(203, 203, 203)
+                .addComponent(jButtonJugador, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(162, Short.MAX_VALUE))
+            .addGroup(jPanelPresentacionJuegoLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(jButtonInstrucciones, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30))
         );
         jPanelPresentacionJuegoLayout.setVerticalGroup(
             jPanelPresentacionJuegoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPresentacionJuegoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButtonInstrucciones)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 206, Short.MAX_VALUE)
+                .addGap(21, 21, 21)
+                .addGroup(jPanelPresentacionJuegoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonInstrucciones, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 243, Short.MAX_VALUE)
                 .addGroup(jPanelPresentacionJuegoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonServidor)
-                    .addComponent(jButtonJugador))
-                .addGap(30, 30, 30))
+                    .addComponent(jButtonJugador)
+                    .addComponent(jButtonServidor))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanelPresentacionJuego, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanelPresentacionJuego, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanelPresentacionJuego, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanelPresentacionJuego, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -144,6 +190,17 @@ public class JFramePresentacionJuego extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButtonInstruccionesActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        ControlMusica.pausarReanudar();
+
+        if (ControlMusica.estaPausada()) {
+            cambiarIcono(jButton1, "/misClases/recursos/playBtn.png");
+        } else {
+            cambiarIcono(jButton1, "/misClases/recursos/pauseBtn.png");
+        }
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -180,9 +237,18 @@ public class JFramePresentacionJuego extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+
     private javax.swing.JButton jButtonInstrucciones;
     private javax.swing.JButton jButtonJugador;
     private javax.swing.JButton jButtonServidor;
     private javax.swing.JPanel jPanelPresentacionJuego;
     // End of variables declaration//GEN-END:variables
+    
+    private void cambiarIcono(javax.swing.JButton boton, String rutaImagen) {
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource(rutaImagen));
+        Image img = originalIcon.getImage().getScaledInstance(boton.getWidth(), boton.getHeight(), Image.SCALE_SMOOTH);
+        boton.setIcon(new ImageIcon(img));
+    }
+
 }

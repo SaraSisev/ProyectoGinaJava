@@ -8,21 +8,25 @@ import java.awt.Color;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 
-/**
- *
- * @author Eliba
- */
+import misClases.FondoPanel;
+
 public class JFrameInstrucciones extends javax.swing.JFrame {
 
-    /**
-     * Creates new form JFrameInstrucciones
-     */
+    FondoPanel fondo = new FondoPanel("/misClases/recursos/inst.jpg");
+    
     public JFrameInstrucciones() {
+        //this.setContentPane(fondo);
         initComponents();
-        getContentPane().setBackground(Color.YELLOW);
-        ImageIcon dona = new ImageIcon(getClass().getResource("/imagenes/dona3.jpg"));
-        Image imgDona = dona.getImage().getScaledInstance(jLabelDona.getWidth(), jLabelDona.getHeight(), Image.SCALE_SMOOTH);
-        jLabelDona.setIcon(new ImageIcon(imgDona)); 
+        
+        cambiarIcono(jButton1, ControlMusica.estaPausada()
+            ? "/misClases/recursos/playBtn.png"
+            : "/misClases/recursos/pauseBtn.png");
+        cambiarIcono(jButton2, "/misClases/recursos/regresa.png");
+
+        if (!ControlMusica.estaPausada()) {
+            ControlMusica.iniciarMusica("/misClases/recursos/MusicaInicio.wav");
+        }
+
     }
 
     /**
@@ -34,46 +38,86 @@ public class JFrameInstrucciones extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanelInstrucciones = new javax.swing.JPanel();
+        jPanelInstrucciones =  new FondoPanel("/misClases/recursos/inst.jpg");
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jLabelDona = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setBackground(new java.awt.Color(255, 255, 102));
+        setBackground(new java.awt.Color(0, 255, 0));
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        setPreferredSize(new java.awt.Dimension(650, 740));
 
-        jPanelInstrucciones.setBackground(new java.awt.Color(255, 102, 153));
-        jPanelInstrucciones.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "INSTRUCCIONES", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.ABOVE_TOP, new java.awt.Font("Gill Sans Ultra Bold", 0, 18))); // NOI18N
+        jPanelInstrucciones.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelInstrucciones.setOpaque(false);
+        jPanelInstrucciones.setPreferredSize(new java.awt.Dimension(650, 740));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 14)); // NOI18N
+        jButton1.setBorderPainted(false);
+        jButton1.setContentAreaFilled(false);
+        jButton1.setFocusPainted(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/misClases/recursos/regresa.png"))); // NOI18N
+        jButton2.setBorderPainted(false);
+        jButton2.setContentAreaFilled(false);
+        jButton2.setFocusPainted(false);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jScrollPane1.setBackground(new java.awt.Color(67, 47, 116));
+        jScrollPane1.setOpaque(false);
+
+        jTextArea1.setBackground(new java.awt.Color(88, 47, 119));
+        jTextArea1.setColumns(10);
+        jTextArea1.setFont(new java.awt.Font("Tempus Sans ITC", 0, 14)); // NOI18N
+        jTextArea1.setForeground(new java.awt.Color(255, 255, 255));
         jTextArea1.setRows(5);
         jTextArea1.setText("1.- Cada Jugador elige un personaje misterioso \n2.- Tratar de adivinar el personaje misterioso del otro\n3.- Cuando creas saber quien e, puedes adivinar.\n4.- Si te quivocas pierdes bot!!");
+        jTextArea1.setBorder(null);
+        jTextArea1.setOpaque(false);
         jScrollPane1.setViewportView(jTextArea1);
 
-        jLabelDona.setText("1");
+        jLabel1.setFont(new java.awt.Font("Tempus Sans ITC", 1, 26)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("INSTRUCCIONES");
 
         javax.swing.GroupLayout jPanelInstruccionesLayout = new javax.swing.GroupLayout(jPanelInstrucciones);
         jPanelInstrucciones.setLayout(jPanelInstruccionesLayout);
         jPanelInstruccionesLayout.setHorizontalGroup(
             jPanelInstruccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelInstruccionesLayout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(39, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelInstruccionesLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabelDona, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(28, 28, 28)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelInstruccionesLayout.createSequentialGroup()
+                .addContainerGap(114, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(80, 80, 80))
         );
         jPanelInstruccionesLayout.setVerticalGroup(
             jPanelInstruccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelInstruccionesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabelDona, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(174, Short.MAX_VALUE))
+                .addContainerGap(11, Short.MAX_VALUE)
+                .addGroup(jPanelInstruccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(77, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -84,13 +128,27 @@ public class JFrameInstrucciones extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 21, Short.MAX_VALUE)
-                .addComponent(jPanelInstrucciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jPanelInstrucciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        ControlMusica.pausarReanudar();
+
+        if (ControlMusica.estaPausada()) {
+            cambiarIcono(jButton1, "/misClases/recursos/playBtn.png");
+        } else {
+            cambiarIcono(jButton1, "/misClases/recursos/pauseBtn.png");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        this.dispose();  
+        JFramePresentacionJuego presentacion = new JFramePresentacionJuego();
+        presentacion.setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -128,9 +186,18 @@ public class JFrameInstrucciones extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabelDona;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanelInstrucciones;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
+
+    private void cambiarIcono(javax.swing.JButton boton, String rutaImagen) {
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource(rutaImagen));
+        Image img = originalIcon.getImage().getScaledInstance(boton.getWidth(), boton.getHeight(), Image.SCALE_SMOOTH);
+        boton.setIcon(new ImageIcon(img));
+    }
+
 }
