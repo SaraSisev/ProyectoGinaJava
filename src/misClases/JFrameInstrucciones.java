@@ -26,7 +26,7 @@ public class JFrameInstrucciones extends javax.swing.JFrame {
         if (!ControlMusica.estaPausada()) {
             ControlMusica.iniciarMusica("/misClases/recursos/MusicaInicio.wav");
         }
-        
+
     }
 
     /**
@@ -199,4 +199,5 @@ public class JFrameInstrucciones extends javax.swing.JFrame {
         Image img = originalIcon.getImage().getScaledInstance(boton.getWidth(), boton.getHeight(), Image.SCALE_SMOOTH);
         boton.setIcon(new ImageIcon(img));
     }
+
 }

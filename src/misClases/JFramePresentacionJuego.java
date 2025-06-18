@@ -1,4 +1,5 @@
 
+
 package misClases;
 
 import java.awt.Graphics;
@@ -200,7 +201,6 @@ public class JFramePresentacionJuego extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_jButton1ActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -238,6 +238,7 @@ public class JFramePresentacionJuego extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+
     private javax.swing.JButton jButtonInstrucciones;
     private javax.swing.JButton jButtonJugador;
     private javax.swing.JButton jButtonServidor;
