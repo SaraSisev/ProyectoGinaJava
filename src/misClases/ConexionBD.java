@@ -22,7 +22,7 @@ public class ConexionBD {
             return null;
         }
     }
-    
+   
     
     public static List<Datos> obtenerTodasLasPeliculas() {
         List<Datos> lista = new ArrayList<>();

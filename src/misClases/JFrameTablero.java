@@ -58,7 +58,7 @@ public class JFrameTablero extends javax.swing.JFrame {
         new Thread(() -> {//permite ejecutar el codigo en paralelo sin bloquearme la interfaz
             try {
                 //instanciamos el frame del chat
-                chat = new JFrameChat();
+                chat = new JFrameChat(true);
                 //lo hacemos visible
                 chat.setVisible(true);
                 //IMPORTANTE despues de la instancia, instanciamos el server mandandole el frame
@@ -83,7 +83,7 @@ public class JFrameTablero extends javax.swing.JFrame {
             try {
                 //se pide la ip del servidor 
                 String ipServidor = JOptionPane.showInputDialog("Introduce la IP del servidor");
-                chat = new JFrameChat();//se instancia nuestro frame de chat
+                chat = new JFrameChat(false);//se instancia nuestro frame de chat
                 chat.setVisible(true);//se muestra el frame
                 //IMPORTANTE despues de la instancia ahora si instanciamos a jugador para mandare a chat
                 Jugador jugador = new Jugador(ipServidor,chat);
