@@ -3,13 +3,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package misClases;
-
+//utimo avance
 import java.io.DataOutputStream;
 import java.io.IOException;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import java.sql.*;
+import java.util.*;
 
 /**
  *
@@ -18,159 +20,207 @@ import javax.swing.SwingUtilities;
 public class JFrameChat extends javax.swing.JFrame {
     private DataOutputStream salida;
     private JPopupMenu menuPreguntas;
-    //atributos de control de preguntas
-    private boolean miTurno = false;
-    private boolean preguntaEnviada = false;
-        
-    /**
-     * Creates new form JFrameChat
-     */
-    public JFrameChat() {
+    //atributos para el control de preguntas 
+    private GameState currentState;
+    private boolean isServer;//bandera que indica si el jugador es server y asi darle la primer pregunta
+    private boolean preguntaPendiente = false;//bandera que representa la espera de pregunta
+
+    private JFrameChat() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    //enumeracion con los estados de juego actuando como turnos
+    private enum GameState {
+        MY_TURN,//representa el turno del servidor
+        OPPONENT_TURN,//representa el tunro del jugador para preguntar
+        AWAITING_REPLY//representa la espera de respuestas
+    }
+    
+    //consutrcutor que recibe true si fue instanciado en el logico del servidor o false si fue en el de jugador
+    public JFrameChat(boolean isServer) {
         initComponents();
-        this.jButtonSi.setEnabled(false);
-        this.jButtonNo.setEnabled(false);
+        this.isServer = isServer;
+        if (isServer) {
+            currentState = GameState.MY_TURN;//indica que el servidor inicia preguntando
+        } else {
+            currentState = GameState.OPPONENT_TURN;//jugador inicia esperando pregunta
+        }
+        
+        updateUIState();
+        //configuracion inicial de listeners y los mensajes que son enviados a el textarea
         jButtonSi.addActionListener(e -> enviarRespuesta("SÍ"));
         jButtonNo.addActionListener(e -> enviarRespuesta("NO"));
-
-        this.inicializacionPreguntas();
-        this.jButtonEnviar.addActionListener(e->enviarMensaje());
-        this.jButtonPreguntas.addActionListener(e -> menuPreguntas.show(jButtonPreguntas, 0, jButtonPreguntas.getHeight()));
-
+        jButtonEnviar.addActionListener(e -> enviarMensaje());
+        jButtonPreguntas.addActionListener(e -> menuPreguntas.show(jButtonPreguntas, 0, jButtonPreguntas.getHeight()));
+        
+        inicializacionPreguntas();
     }
-    public void setSalida(DataOutputStream salida){
-        this.salida = salida;
-    }
-    public void mostrarMensaje(String mensaje){
+
+    //para estar actualizando constantemente el UI segun el estado del juego
+    private void updateUIState() {
         SwingUtilities.invokeLater(() -> {
-                this.jTextAreaChat.append(mensaje + "\n");
-                });
+         switch (currentState) {
+                case MY_TURN:
+                    enableQuestionMode();
+                    break;
+                    
+                case OPPONENT_TURN:
+                    disableAllControls();
+                    break;
+                    
+                case AWAITING_REPLY:
+                    if (preguntaPendiente) {
+                        disableQuestionControls();
+                    } else {
+                        enableAnswerMode();
+                    }
+                    break;
+            }   
+        });
     }
-    private void enviarMensaje(){
-        String mensaje = this.jTextFieldMensajes.getText().trim();
+    //metodo que representa el estado de pregunta
+    private void enableQuestionMode() {
+        jButtonEnviar.setEnabled(true);
+        jButtonPreguntas.setEnabled(true);
+        jButtonSi.setEnabled(false);
+        jButtonNo.setEnabled(false);
+        jTextFieldMensajes.setEnabled(true);
+    }
+    //metodo que representa el estado de respuesta
+    private void enableAnswerMode() {
+        jButtonEnviar.setEnabled(false);
+        jButtonPreguntas.setEnabled(false);
+        jButtonSi.setEnabled(true);
+        jButtonNo.setEnabled(true);
+        jTextFieldMensajes.setEnabled(false);
+    }
+    //metodo que desactiva todos los botones 
+    private void disableQuestionControls(){
+        jButtonEnviar.setEnabled(false);
+        jButtonPreguntas.setEnabled(false);
+        jButtonSi.setEnabled(false);
+        jButtonNo.setEnabled(false);
+        jTextFieldMensajes.setEnabled(false); 
+    }
+    private void disableAllControls(){
+        disableQuestionControls();
+    }
+    //metodo que envia el mensaje y lo muestra en el textarea
+    private void enviarMensaje() {
+        String mensaje = jTextFieldMensajes.getText().trim();
         if (!mensaje.isEmpty()) {
-            if (!miTurno || preguntaEnviada) {
-                mostrarMensaje("Debes esperar tu turno o una respuesta antes de nuevo");
-                return;
-            }
-
             try {
-                // Tratamos cualquier mensaje enviado por este botón como pregunta
-                String mensajeConPrefijo = "PREGUNTA:" + mensaje;
-                salida.writeUTF(mensajeConPrefijo);
+                salida.writeUTF("PREGUNTA:" + mensaje);
                 mostrarMensaje("YO: " + mensaje);
-                this.jTextFieldMensajes.setText("");
-
-                preguntaEnviada = true;
-                miTurno = false;
-                this.jButtonPreguntas.setEnabled(false);
-                this.jButtonEnviar.setEnabled(false);
+                jTextFieldMensajes.setText("");
+                
+                // Actualizar estado
+                currentState = GameState.AWAITING_REPLY;
+                preguntaPendiente=true;
+                updateUIState();
             } catch (IOException e) {
                 mostrarMensaje("Error al enviar mensaje");
             }
         }
     }
-    private void inicializacionPreguntas(){
-        menuPreguntas = new JPopupMenu();
-        //categoria 1 de preguntas: color pelo
-        JMenu colorPeloMenu = new JMenu("COLOR DE PELO");
-        String[] colores = {"Castano", "Azul", "Rubio", "Gris", "Verde", "Pelirrojo", "Negro"};
-        for(String color : colores){
-            JMenuItem item = new JMenuItem(color);
-            item.addActionListener(e -> enviarMensajePredefinido("TU COLOR DE PELO ES " + color +"?"));
-            colorPeloMenu.add(item);
-        }
-        menuPreguntas.add(colorPeloMenu);
-        //categoria 2 de preguntas: genero
-        JMenu generoMenu = new JMenu("GENERO DE PERSONAJE");
-        String[] generos = {"Hombre", "Mujer"};
-        for(String genero : generos){
-            JMenuItem item = new JMenuItem(genero);
-            item.addActionListener(e -> enviarMensajePredefinido("TU PERSONAJE ES " + genero + "?"));
-            generoMenu.add(item);
-        }
-        menuPreguntas.add(generoMenu);
-        //categoria 3 de preguntas : madurez
-        JMenu madurezMenu = new JMenu("MADUREZ DEL PERSONAJE");
-        String[] madurez = {"ADULTO", "INFANTE"};
-        for(String edades : madurez){
-            JMenuItem item = new JMenuItem(edades);
-            item.addActionListener(e -> enviarMensajePredefinido("TU PERSONAJE ES UN" + madurez + "?"));
-            madurezMenu.add(item);
-        }
-        menuPreguntas.add(madurezMenu);
-        //categoria 4 de preguntas : tipo de ser
-        JMenu tipoMenu = new JMenu("TIPO DE SER");
-        String[] tipo = {"HUMANO", "NO HUMANO"};
-        for(String tipos : tipo){
-            JMenuItem item = new JMenuItem(tipos);
-            item.addActionListener(e -> enviarMensajePredefinido("TU PERSONAJE ES UN " + tipo + "?"));
-            tipoMenu.add(item);
-        }
-        menuPreguntas.add(tipoMenu);
-    }
-    private void enviarMensajePredefinido(String mensaje){
-        if(!miTurno || preguntaEnviada){
-            mostrarMensaje("Debes esperar tu turno o una respuesta antes de nuevo");
-            return;
-        }
-        try{
+    //metodo que manda los mensajes de las preguntas ya definidas
+    private void enviarMensajePredefinido(String mensaje) {
+        try {
             salida.writeUTF("PREGUNTA:" + mensaje);
-            mostrarMensaje("YO:" +mensaje);
-            preguntaEnviada = true;
-            miTurno = false;
-            this.jButtonPreguntas.setEnabled(false);
-            this.jButtonEnviar.setEnabled(false);
-        }catch(IOException e){
-            mostrarMensaje("Error");
+            mostrarMensaje("YO: " + mensaje);
+            
+            // Actualizar estado
+            currentState = GameState.AWAITING_REPLY;
+            preguntaPendiente=true;
+            updateUIState();
+        } catch (IOException e) {
+            mostrarMensaje("Error al enviar pregunta");
         }
     }
-    public void procesarMensajeRecibido(String mensaje){
-        if (mensaje.startsWith("PREGUNTA:")) {
-            mostrarMensaje("OPONENTE: " + mensaje.substring(9));
-            miTurno = false;
-            this.jButtonPreguntas.setEnabled(false); // no puede hacer preguntas mientras responde
-            activarBotonesSiNo();
-        } else if (mensaje.startsWith("RESPUESTA:")) {
-            mostrarMensaje("RESPUESTA: " + mensaje.substring(10));
-            preguntaEnviada = false;
-            miTurno = true;
-            this.jButtonPreguntas.setEnabled(true); // ahora puedes hacer otra pregunta
-            this.jButtonEnviar.setEnabled(true);
-        } else {
-            mostrarMensaje("OPONENTE: " + mensaje); // mensaje normal
-        }
-    }
-    private void enviarRespuesta(String respuesta){
+    //metodo para mandar la respuesta a la pregunta
+    private void enviarRespuesta(String respuesta) {
         try {
             salida.writeUTF("RESPUESTA:" + respuesta);
             mostrarMensaje("YO RESPONDÍ: " + respuesta);
-            miTurno = true;
-            preguntaEnviada = false;
-            this.jButtonPreguntas.setEnabled(true);
-            this.jButtonEnviar.setEnabled(true);
-            desactivarBotonesSiNo(); // para no volver a responder
-        } catch(IOException e){
-            mostrarMensaje("Error al enviar respuesta.");
+            // Cambiar a mi turno para preguntar después de responder
+            currentState = GameState.MY_TURN;
+            preguntaPendiente = false;
+            updateUIState();
+        } catch (IOException e) {
+            mostrarMensaje("Error al enviar respuesta");
         }
     }
-    public void habilitarTurnoInicial(){
-        this.miTurno=true;
-        this.jButtonPreguntas.setEnabled(true);
-        this.jButtonEnviar.setEnabled(true);
+    //metodo para procesar el mensaje que se recibio
+    public void procesarMensajeRecibido(String mensaje) {
+        if (mensaje.startsWith("PREGUNTA:")) {
+            mostrarMensaje("OPONENTE: " + mensaje.substring(9));
+            
+            // Cambiar a modo de respuesta
+            currentState = GameState.AWAITING_REPLY;
+            preguntaPendiente=false;
+            updateUIState();
+            
+        } else if (mensaje.startsWith("RESPUESTA:")) {
+            mostrarMensaje("RESPUESTA: " + mensaje.substring(10));
+            
+            // Despues de recibir respuesta, es mi turno para preguntar
+            currentState = GameState.MY_TURN;
+            preguntaPendiente = false;
+            updateUIState();
+            
+            updateUIState();
+        } else {
+            mostrarMensaje("OPONENTE: " + mensaje);
+        }
     }
-    private void activarBotonesSiNo() {
-        jButtonSi.setEnabled(true);
-        jButtonNo.setEnabled(true);
+   //metodo para mostrar el mensaje en nuestro textarea
+    public void mostrarMensaje(String mensaje){
+        SwingUtilities.invokeLater(() -> {
+                this.jTextAreaChat.append(mensaje + "\n");
+                });
     }
+    //metodo para inicializar las preguntas que tenemos en la BD ya definidas en listas que tienen sublistas
+    private void inicializacionPreguntas(){
+        menuPreguntas = new JPopupMenu();
+        Map<String, List<String>> preguntasPorCategoria = new HashMap<>();
 
-    private void desactivarBotonesSiNo() {
-        jButtonSi.setEnabled(false);
-        jButtonNo.setEnabled(false);
+        try (Connection conn = ConexionBD.conectar()) {
+            String query = "SELECT categoria, valor FROM preguntas";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String categoria = rs.getString("categoria");
+                String valor = rs.getString("valor");
+
+                preguntasPorCategoria
+                    .computeIfAbsent(categoria, k -> new ArrayList<>())
+                    .add(valor);
+            }
+
+            for (Map.Entry<String, List<String>> entry : preguntasPorCategoria.entrySet()) {
+                String categoria = entry.getKey();
+                List<String> opciones = entry.getValue();
+
+                JMenu subMenu = new JMenu(categoria);
+                for (String opcion : opciones) {
+                    JMenuItem item = new JMenuItem(opcion);
+                    //para construir la pregunta direcamente 
+                    item.addActionListener(e -> enviarMensajePredefinido("TU PERSONAJE ES " + opcion + "?"));
+                    subMenu.add(item);
+                }
+                menuPreguntas.add(subMenu);
+            }
+
+        } catch (SQLException e) {
+            mostrarMensaje("Error al cargar preguntas de la base de datos.");
+            e.printStackTrace();
+        }
     }
-
-
-
-
+    public void setSalida(DataOutputStream salida) {
+        this.salida = salida;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
