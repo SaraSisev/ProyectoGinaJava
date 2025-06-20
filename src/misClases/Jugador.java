@@ -37,13 +37,15 @@ public class Jugador extends Conexion{
                 DataInputStream entrada = new DataInputStream(cs.getInputStream());
                 while (true) {
                     String mensaje = entrada.readUTF();
-                    frame.mostrarMensaje("Servidor: " + mensaje);
+                    frame.procesarMensajeRecibido(mensaje);
+
                 }
             } catch (IOException e) {
                 frame.mostrarMensaje("Error en conexión");
             }
         }).start();
     }
+    
     
 
 }

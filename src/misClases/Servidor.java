@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package misClases;
-
+//ultima modificacion, funciona solo que servidor mande preguntas jugador aun no
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -27,6 +27,7 @@ public class Servidor extends Conexion{//Se hereda de conexion para el uso de so
         try{
             System.out.println("Esperando..");//se espera la conexion
             cs=ss.accept();//comienza el socket y espera una conexion desde el cliente
+            frame2.mostrarMensaje("TU INICIAS EL JUEGO. COMIENZA HACIENDO UNA PREGUNTA");
             System.out.println("Cliente en linea");
             if(frame!=null){
                 frame.conexionLista();
@@ -39,7 +40,7 @@ public class Servidor extends Conexion{//Se hereda de conexion para el uso de so
                 try{
                     while(true){
                         String mensaje = entradaJugador.readUTF();
-                        frame2.mostrarMensaje("Jugador: " + mensaje);
+                        frame2.procesarMensajeRecibido(mensaje);
                     }
                 }catch(IOException e){
                     frame2.mostrarMensaje("Conexion al iniciar servidor");
