@@ -11,6 +11,7 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.lang.String;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -23,11 +24,19 @@ import javax.swing.JPanel;
 public class JFramePersonaje extends javax.swing.JFrame {
 
     FondoPanel fondo = new FondoPanel("/misClases/recursos/pWall.jpg");
-
+    private String nombre;//recibe los nombres del jugador
+    private String tipo;//recibe si el jugador es normal o jugador-servidor
     
     public JFramePersonaje() {
         initComponents();
+        
+    }
+    
+    public JFramePersonaje(String nombre, String tipo) {
+        initComponents();
         Pselect.setVisible(false); // Oculto
+        this.tipo=tipo;
+        this.nombre=nombre;
         
         cambiarIcono(jButton2, ControlMusica.estaPausada()
             ? "/misClases/recursos/playBtn.png"
@@ -35,7 +44,7 @@ public class JFramePersonaje extends javax.swing.JFrame {
         cambiarIcono(jButton1, "/misClases/recursos/casa.png");
         
         if (!ControlMusica.estaPausada()) {
-            ControlMusica.iniciarMusica("/misClases/recursos/MusicaFondo.wav");
+            ControlMusica.iniciarMusica("/misClases/recursos/MusicaInicio.wav");
         }
         
         generarTableroPersonajes();
@@ -54,7 +63,7 @@ public class JFramePersonaje extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jPanel2 = new FondoPanel("/misClases/recursos/pWall.jpg");
+        jPanel2 = new javax.swing.JPanel();
         Pselect = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -78,8 +87,8 @@ public class JFramePersonaje extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("ELEGIR PERSONAJE");
 
-        jPanel2.setBackground(new java.awt.Color(204, 255, 255));
-        jPanel2.setLayout(new java.awt.GridLayout());
+        jPanel2.setBackground(new java.awt.Color(33, 93, 149));
+        jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
         Pselect.setText("Continuar");
         Pselect.setEnabled(false);
@@ -162,7 +171,7 @@ public class JFramePersonaje extends javax.swing.JFrame {
 
     private void PselectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PselectActionPerformed
         this.dispose();  
-        JFrameTablero tablero = new JFrameTablero();
+        JFrameTablero tablero = new JFrameTablero(nombre, tipo);
         tablero.setVisible(true);
     }//GEN-LAST:event_PselectActionPerformed
 
@@ -220,40 +229,40 @@ public class JFramePersonaje extends javax.swing.JFrame {
         // Paso 1: Lista de imágenes
         List<String> imagenes = new ArrayList<>();
         Collections.addAll(imagenes,
-            "/misClases/recursos/personajes/p1.jpg",
-            "/misClases/recursos/personajes/p2.jpg",
-            "/misClases/recursos/personajes/p3.jpg",
-            "/misClases/recursos/personajes/p4.jpg",
-            "/misClases/recursos/personajes/p5.jpg",
-            "/misClases/recursos/personajes/p6.jpg",
-            "/misClases/recursos/personajes/p7.jpg",
-            "/misClases/recursos/personajes/p8.jpg",
-            "/misClases/recursos/personajes/p9.jpg",
-            "/misClases/recursos/personajes/p10.jpg",
-            "/misClases/recursos/personajes/p11.jpg",
-            "/misClases/recursos/personajes/p12.jpg",
-            "/misClases/recursos/personajes/p13.jpg",
-            "/misClases/recursos/personajes/p14.jpg",
-            "/misClases/recursos/personajes/p15.jpg",
-            "/misClases/recursos/personajes/p16.jpg",
-            "/misClases/recursos/personajes/p17.jpg",
-            "/misClases/recursos/personajes/p18.jpg",
-            "/misClases/recursos/personajes/p19.jpg",
-            "/misClases/recursos/personajes/p20.jpg",
-            "/misClases/recursos/personajes/p21.jpg",
-            "/misClases/recursos/personajes/p22.jpg",
-            "/misClases/recursos/personajes/p23.jpg",
-            "/misClases/recursos/personajes/p24.jpg",
-            "/misClases/recursos/personajes/p25.jpg",
-            "/misClases/recursos/personajes/p26.jpg",
-            "/misClases/recursos/personajes/p27.jpg",
-            "/misClases/recursos/personajes/p28.jpg",
-            "/misClases/recursos/personajes/p29.jpg",
-            "/misClases/recursos/personajes/p30.jpg",
-            "/misClases/recursos/personajes/p31.jpg",
-            "/misClases/recursos/personajes/p32.jpg",
-            "/misClases/recursos/personajes/p33.jpg",
-            "/misClases/recursos/personajes/p34.jpg"     
+            "/misClases/recursos/personajes/Alcalde Quimby.png",
+            "/misClases/recursos/personajes/Apu.png",
+            "/misClases/recursos/personajes/Barney.png",
+            "/misClases/recursos/personajes/Bart.png",
+            "/misClases/recursos/personajes/Bruja Lisa.png",
+            "/misClases/recursos/personajes/Capitan Horatio.png",
+            "/misClases/recursos/personajes/Carl.png",
+            "/misClases/recursos/personajes/Duffman.png",
+            "/misClases/recursos/personajes/Evil Flanders.png",
+            "/misClases/recursos/personajes/Funzo.png",
+            "/misClases/recursos/personajes/Gato Marge.png",
+            "/misClases/recursos/personajes/Hans Moleman.png",
+            "/misClases/recursos/personajes/Herman.png",
+            "/misClases/recursos/personajes/Heroe Milhouse.png",
+            "/misClases/recursos/personajes/Homero.png",
+            "/misClases/recursos/personajes/Kodos.png",
+            "/misClases/recursos/personajes/Krusty.png",
+            "/misClases/recursos/personajes/Lenny.png",
+            "/misClases/recursos/personajes/Lisa.png",
+            "/misClases/recursos/personajes/Maggie.png",
+            "/misClases/recursos/personajes/Marge.png",
+            "/misClases/recursos/personajes/Melvin.png",
+            "/misClases/recursos/personajes/Milhouse.png",
+            "/misClases/recursos/personajes/Moe.png",
+            "/misClases/recursos/personajes/Nick Riviera.png",
+            "/misClases/recursos/personajes/Otto.png",
+            "/misClases/recursos/personajes/Patty.png",
+            "/misClases/recursos/personajes/Payaso Rapha.png",
+            "/misClases/recursos/personajes/Pica.png",
+            "/misClases/recursos/personajes/Rasca.png",
+            "/misClases/recursos/personajes/Selma.png",
+            "/misClases/recursos/personajes/Snake.png",
+            "/misClases/recursos/personajes/Sr Burns.png",
+            "/misClases/recursos/personajes/Willie.png"     
         );
 
         // Paso 2: Barajar y tomar solo 24
@@ -294,7 +303,7 @@ public class JFramePersonaje extends javax.swing.JFrame {
             boton.addActionListener(e -> {
                 String nombre = ruta.substring(ruta.lastIndexOf("/") + 1).replace(".png", "");
                 String jugadorSeleccionado = nombre;
-                //JOptionPane.showMessageDialog(this, "Seleccionaste a: " + nombre);
+                JOptionPane.showMessageDialog(this, "Seleccionaste a: " + nombre);
 
                 Pselect.setVisible(true);   // Ahora aparece
                 Pselect.setEnabled(true);   // Y se puede usar
