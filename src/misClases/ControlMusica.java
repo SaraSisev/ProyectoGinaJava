@@ -15,6 +15,7 @@ public class ControlMusica {
                 clip = AudioSystem.getClip();
                 clip.open(audioInputStream);
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
+                clip.start();
             } else if (pausada) {
                 clip.setMicrosecondPosition(0);
                 clip.start();

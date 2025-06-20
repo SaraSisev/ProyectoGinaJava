@@ -18,6 +18,7 @@ import javax.swing.Timer;
 public class JFrameTablero extends javax.swing.JFrame {
     //atributos para recibir datos de otros JFrames
     private String nombre;//recibe los nombres del jugador
+    private String personaje;//recibe el nombre del personaje escogido
     private String tipo;//recibe si el jugador es normal o jugador-servidor
 
     //atributos para el aspecto de tiempo transcurrido en la pantalla
@@ -35,10 +36,13 @@ public class JFrameTablero extends javax.swing.JFrame {
         
     }
     //constructor que recibe el nombre y tipo de jugador desde el frame principal
-    public JFrameTablero(String nombre, String tipo){
+    public JFrameTablero(String nombre, String tipo, String personaje){
         initComponents();
         this.tipo=tipo;
         this.nombre=nombre;
+        this.personaje=personaje;
+        lblPersonaje.setText(personaje);
+        lblNombre.setText(nombre);
         //iniciarTiempoJuego();
         //condicional para verificar que tipo de jugador es
         if(tipo.equals("servidor")){
@@ -85,6 +89,7 @@ public class JFrameTablero extends javax.swing.JFrame {
                 Jugador jugador = new Jugador(ipServidor,chat);
     
                 System.out.println("Iniciando como jugador");
+                
                 //iniciamos el conteo de partida
                 SwingUtilities.invokeLater(this::iniciarTiempoJuego);
                 //inicia el envio de mensajes
@@ -134,26 +139,46 @@ public class JFrameTablero extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabelTiempo = new javax.swing.JLabel();
+        lblPersonaje = new javax.swing.JLabel();
+        lblFecha = new javax.swing.JLabel();
+        lblNombre = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabelTiempo.setText("jLabel1");
+
+        lblPersonaje.setText("Personaje");
+
+        lblFecha.setText("jLabel1");
+
+        lblNombre.setText("jLabel1");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(184, Short.MAX_VALUE)
+                .addContainerGap(304, Short.MAX_VALUE)
+                .addComponent(lblFecha)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabelTiempo)
-                .addGap(179, 179, 179))
+                .addGap(46, 46, 46)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNombre)
+                    .addComponent(lblPersonaje))
+                .addGap(82, 82, 82))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabelTiempo)
-                .addContainerGap(266, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelTiempo)
+                    .addComponent(lblFecha)
+                    .addComponent(lblPersonaje))
+                .addGap(26, 26, 26)
+                .addComponent(lblNombre)
+                .addContainerGap(224, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -208,5 +233,8 @@ public class JFrameTablero extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelTiempo;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblFecha;
+    private javax.swing.JLabel lblNombre;
+    private javax.swing.JLabel lblPersonaje;
     // End of variables declaration//GEN-END:variables
 }

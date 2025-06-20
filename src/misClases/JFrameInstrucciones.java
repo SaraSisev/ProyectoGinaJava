@@ -21,7 +21,7 @@ public class JFrameInstrucciones extends javax.swing.JFrame {
         cambiarIcono(jButton1, ControlMusica.estaPausada()
             ? "/misClases/recursos/playBtn.png"
             : "/misClases/recursos/pauseBtn.png");
-        cambiarIcono(jButton2, "/misClases/recursos/regresa.png");
+        cambiarIcono(jButton2, "/misClases/recursos/casa.png");
 
         if (!ControlMusica.estaPausada()) {
             ControlMusica.iniciarMusica("/misClases/recursos/MusicaInicio.wav");
@@ -48,12 +48,12 @@ public class JFrameInstrucciones extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 255, 0));
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-        setPreferredSize(new java.awt.Dimension(650, 740));
 
         jPanelInstrucciones.setBackground(new java.awt.Color(255, 255, 255));
         jPanelInstrucciones.setOpaque(false);
         jPanelInstrucciones.setPreferredSize(new java.awt.Dimension(650, 740));
 
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/misClases/recursos/playBtn.png"))); // NOI18N
         jButton1.setBorderPainted(false);
         jButton1.setContentAreaFilled(false);
         jButton1.setFocusPainted(false);
@@ -63,7 +63,7 @@ public class JFrameInstrucciones extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/misClases/recursos/regresa.png"))); // NOI18N
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/misClases/recursos/casa.png"))); // NOI18N
         jButton2.setBorderPainted(false);
         jButton2.setContentAreaFilled(false);
         jButton2.setFocusPainted(false);
@@ -76,6 +76,7 @@ public class JFrameInstrucciones extends javax.swing.JFrame {
         jScrollPane1.setBackground(new java.awt.Color(67, 47, 116));
         jScrollPane1.setOpaque(false);
 
+        jTextArea1.setEditable(false);
         jTextArea1.setBackground(new java.awt.Color(88, 47, 119));
         jTextArea1.setColumns(10);
         jTextArea1.setFont(new java.awt.Font("Tempus Sans ITC", 0, 14)); // NOI18N
@@ -95,29 +96,31 @@ public class JFrameInstrucciones extends javax.swing.JFrame {
         jPanelInstruccionesLayout.setHorizontalGroup(
             jPanelInstruccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelInstruccionesLayout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(163, 163, 163)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelInstruccionesLayout.createSequentialGroup()
-                .addContainerGap(114, Short.MAX_VALUE)
+                .addContainerGap(103, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(80, 80, 80))
         );
         jPanelInstruccionesLayout.setVerticalGroup(
             jPanelInstruccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelInstruccionesLayout.createSequentialGroup()
-                .addContainerGap(11, Short.MAX_VALUE)
+                .addContainerGap(9, Short.MAX_VALUE)
                 .addGroup(jPanelInstruccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(77, Short.MAX_VALUE))
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanelInstruccionesLayout.createSequentialGroup()
+                        .addGroup(jPanelInstruccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(98, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -128,7 +131,7 @@ public class JFrameInstrucciones extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelInstrucciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanelInstrucciones, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
