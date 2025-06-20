@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class ConexionBD {
     public static java.sql.Connection conectar() {
         try {
-            String url = "jdbc:mysql://localhost:3306/Entretenimiento";
+            String url = "jdbc:mysql://localhost:3306/adivinaquien";
             String user = "root";
             String password = "";
             java.sql.Connection conn = DriverManager.getConnection(url, user, password);
@@ -24,17 +24,17 @@ public class ConexionBD {
     }
     
     
-    public static List<Peliculas> obtenerTodasLasPeliculas() {
-        List<Peliculas> lista = new ArrayList<>();
+    public static List<Datos> obtenerTodasLasPeliculas() {
+        List<Datos> lista = new ArrayList<>();
 
-        String sql = "SELECT * FROM peliculas";
+        String sql = "SELECT * FROM partidas";
 
         try (Connection conn = conectar();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                Peliculas peli = new Peliculas(
+                Datos peli = new Datos(
                     rs.getString("nombre"),
                     rs.getInt("duracion"),
                     rs.getString("fecha_estreno"),

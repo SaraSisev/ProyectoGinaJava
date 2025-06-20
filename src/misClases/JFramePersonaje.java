@@ -26,6 +26,7 @@ public class JFramePersonaje extends javax.swing.JFrame {
     FondoPanel fondo = new FondoPanel("/misClases/recursos/pWall.jpg");
     private String nombre;//recibe los nombres del jugador
     private String tipo;//recibe si el jugador es normal o jugador-servidor
+    private String personaje;
     
     public JFramePersonaje() {
         initComponents();
@@ -33,7 +34,9 @@ public class JFramePersonaje extends javax.swing.JFrame {
     }
     
     public JFramePersonaje(String nombre, String tipo) {
+        
         initComponents();
+        generarTableroPersonajes();
         Pselect.setVisible(false); // Oculto
         this.tipo=tipo;
         this.nombre=nombre;
@@ -41,7 +44,7 @@ public class JFramePersonaje extends javax.swing.JFrame {
         cambiarIcono(jButton2, ControlMusica.estaPausada()
             ? "/misClases/recursos/playBtn.png"
             : "/misClases/recursos/pauseBtn.png");
-        cambiarIcono(jButton1, "/misClases/recursos/casa.png");
+        cambiarIcono(jButton1, "/misClases/recursos/regresa.png");
         
         if (!ControlMusica.estaPausada()) {
             ControlMusica.iniciarMusica("/misClases/recursos/MusicaInicio.wav");
@@ -65,11 +68,12 @@ public class JFramePersonaje extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         Pselect = new javax.swing.JButton();
+        lblPersonaje = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/misClases/recursos/casa.png"))); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/misClases/recursos/regresa.png"))); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -85,18 +89,25 @@ public class JFramePersonaje extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Tempus Sans ITC", 1, 26)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("ELEGIR PERSONAJE");
+        jLabel1.setText("ELEGIR PERSONAJE POR TABLERO");
 
         jPanel2.setBackground(new java.awt.Color(33, 93, 149));
         jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
+        Pselect.setBackground(new java.awt.Color(226, 175, 2));
+        Pselect.setFont(new java.awt.Font("Tempus Sans ITC", 1, 19)); // NOI18N
         Pselect.setText("Continuar");
+        Pselect.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.black, java.awt.Color.black));
         Pselect.setEnabled(false);
         Pselect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 PselectActionPerformed(evt);
             }
         });
+
+        lblPersonaje.setBackground(new java.awt.Color(36, 94, 150));
+        lblPersonaje.setFont(new java.awt.Font("Tempus Sans ITC", 3, 14)); // NOI18N
+        lblPersonaje.setForeground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -112,31 +123,32 @@ public class JFramePersonaje extends javax.swing.JFrame {
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1)
-                        .addGap(175, 175, 175)
+                        .addGap(103, 103, 103)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(259, 259, 259)
+                .addGap(249, 249, 249)
                 .addComponent(Pselect, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblPersonaje, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(jLabel1)))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 487, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Pselect, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Pselect, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                    .addComponent(lblPersonaje, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -165,13 +177,13 @@ public class JFramePersonaje extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.dispose();  
-        JFramePresentacionJuego presentacion = new JFramePresentacionJuego();
-        presentacion.setVisible(true);
+        JFrameMenu menu = new JFrameMenu(nombre, tipo);
+        menu.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void PselectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PselectActionPerformed
         this.dispose();  
-        JFrameTablero tablero = new JFrameTablero(nombre, tipo);
+        JFrameTablero tablero = new JFrameTablero(nombre, tipo, personaje);
         tablero.setVisible(true);
     }//GEN-LAST:event_PselectActionPerformed
 
@@ -217,6 +229,7 @@ public class JFramePersonaje extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel lblPersonaje;
     // End of variables declaration//GEN-END:variables
 
     private void cambiarIcono(javax.swing.JButton boton, String rutaImagen) {
@@ -302,9 +315,8 @@ public class JFramePersonaje extends javax.swing.JFrame {
             });*/
             boton.addActionListener(e -> {
                 String nombre = ruta.substring(ruta.lastIndexOf("/") + 1).replace(".png", "");
-                String jugadorSeleccionado = nombre;
-                JOptionPane.showMessageDialog(this, "Seleccionaste a: " + nombre);
-
+                personaje = nombre;
+                lblPersonaje.setText("Seleccionaste a: " + personaje);
                 Pselect.setVisible(true);   // Ahora aparece
                 Pselect.setEnabled(true);   // Y se puede usar
             });

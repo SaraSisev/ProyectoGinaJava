@@ -214,9 +214,9 @@ public class JFramePresentacionJuego extends javax.swing.JFrame {
         String nombreJugador1 = JOptionPane.showInputDialog("Introduce el nombre del jugador 1: ");
         //condiconal para impedir que no se introduzca el nombre 
         if(nombreJugador1 != null && !nombreJugador1.trim().isEmpty()){
-            JFramePersonaje perso = new JFramePersonaje(nombreJugador1, "servidor");
-            perso.setLocationRelativeTo(null);
-            perso.setVisible(true);
+            JFrameMenu menu = new JFrameMenu(nombreJugador1, "servidor");
+            menu.setLocationRelativeTo(null);
+            menu.setVisible(true);
             this.dispose();
         }else{
             JOptionPane.showMessageDialog(null, "El nombre es obligatorio");
@@ -228,9 +228,9 @@ public class JFramePresentacionJuego extends javax.swing.JFrame {
         String nombreJugador2 = JOptionPane.showInputDialog("Introduce el nombre del jugaodr 2: ");
         //condiconal para impedir que no se introduzca el nombre
         if(nombreJugador2 != null && !nombreJugador2.trim().isEmpty()){
-            JFramePersonaje perso = new JFramePersonaje(nombreJugador2, "jugador");
-            perso.setLocationRelativeTo(null);
-            perso.setVisible(true);
+            JFrameMenu menu = new JFrameMenu(nombreJugador2, "jugador");
+            menu.setLocationRelativeTo(null);
+            menu.setVisible(true);
             this.dispose();
         }else{
             JOptionPane.showMessageDialog(null, "El nombre es obligatorio");
