@@ -16,7 +16,7 @@ import java.net.Socket;
 public class Conexion {
     //atributos final para definir que no sean modificados, esos son de ley
     private final int puerto = 60000;//Puerto que utilizaremos para realizar la conexion
-    protected String host = "192.168.1.111";//Host para nuestra conexion
+    protected String host = "192.168.1.69";//Host para nuestra conexion
     protected String mensajeServidor;//Mensajes de entrada (recibidios) en el servidor
     //Sera el puerto de escucha de nuestro servidor
     protected ServerSocket ss;//Socket del servidor 
