@@ -123,8 +123,8 @@ public class JFrameTablero extends javax.swing.JFrame {
     }
     
     private void iniciarTiempoJuego(){
-        if(timerIniciado)return;
-        timerIniciado = true;
+        if(timerIniciado)return;//condcional para que no se ejecute el timer dos veces
+        timerIniciado = true;//bandera para indicar que ya se ejecuto un timer
         System.out.println("timer ");
         timer = new Timer(1000, new ActionListener(){
                 public void actionPerformed(ActionEvent e){

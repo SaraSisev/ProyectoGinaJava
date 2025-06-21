@@ -17,6 +17,7 @@ public class Conexion {
     //atributos final para definir que no sean modificados, esos son de ley
     private final int puerto = 54321;//Puerto que utilizaremos para realizar la conexion
     protected String host = "192.168.1.66";//Host para nuestra conexion
+
     protected String mensajeServidor;//Mensajes de entrada (recibidios) en el servidor
     //Sera el puerto de escucha de nuestro servidor
     protected ServerSocket ss;//Socket del servidor 
