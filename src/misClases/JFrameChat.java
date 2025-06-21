@@ -24,7 +24,9 @@ public class JFrameChat extends javax.swing.JFrame {
     private GameState currentState;
     private boolean isServer;//bandera que indica si el jugador es server y asi darle la primer pregunta
     private boolean preguntaPendiente = false;//bandera que representa la espera de pregunta
-
+    //ATRIBUTOS PARA DEFINIR GANADOR
+    private boolean esPreguntaFinal=false;
+    private boolean esperarRespuesta=false;
     private JFrameChat() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
@@ -48,7 +50,7 @@ public class JFrameChat extends javax.swing.JFrame {
         
         updateUIState();
         //configuracion inicial de listeners y los mensajes que son enviados a el textarea
-        jButtonSi.addActionListener(e -> enviarRespuesta("SÍ"));
+        jButtonSi.addActionListener(e -> enviarRespuesta("SI"));
         jButtonNo.addActionListener(e -> enviarRespuesta("NO"));
         jButtonEnviar.addActionListener(e -> enviarMensaje());
         jButtonPreguntas.addActionListener(e -> menuPreguntas.show(jButtonPreguntas, 0, jButtonPreguntas.getHeight()));
@@ -139,31 +141,73 @@ public class JFrameChat extends javax.swing.JFrame {
     }
     //metodo para mandar la respuesta a la pregunta
     private void enviarRespuesta(String respuesta) {
-        try {
-            salida.writeUTF("RESPUESTA:" + respuesta);
-            mostrarMensaje("YO RESPONDÍ: " + respuesta);
-            // Cambiar a mi turno para preguntar después de responder
-            currentState = GameState.MY_TURN;
-            preguntaPendiente = false;
-            updateUIState();
-        } catch (IOException e) {
-            mostrarMensaje("Error al enviar respuesta");
+    try {
+        salida.writeUTF("RESPUESTA:" + respuesta);
+        mostrarMensaje("YO RESPONDÍ: " + respuesta);
+        
+        // Manejar respuesta a pregunta final (solo para el que responde)
+        if (esPreguntaFinal) {
+            if (respuesta.equals("SI")) {
+                SwingUtilities.invokeLater(() -> {
+                    JFramePerdedor framePer = new JFramePerdedor();
+                    framePer.setVisible(true);//se acepta que es el presonaje y perdi
+                });
+            } else {
+                SwingUtilities.invokeLater(() -> {
+                    JFrameGanador frameGan = new JFrameGanador();
+                    frameGan.setVisible(true);//no es mi personaje asi que gane
+                });
+            }
+            disableAllControls();
+            return;
         }
+        
+        currentState = GameState.MY_TURN;
+        preguntaPendiente = false;
+        updateUIState();
+    } catch (IOException e) {
+        mostrarMensaje("Error al enviar respuesta");
     }
+}
     //metodo para procesar el mensaje que se recibio
     public void procesarMensajeRecibido(String mensaje) {
         if (mensaje.startsWith("PREGUNTA:")) {
-            mostrarMensaje("OPONENTE: " + mensaje.substring(9));
+            String pregunta = mensaje.substring(9);
+            mostrarMensaje("OPONENTE: " + pregunta);
             
-            // Cambiar a modo de respuesta
+            //detectar pregunta final
+            if(pregunta.startsWith("TU PERSONAJE ES ") && pregunta.endsWith("?")){
+                esPreguntaFinal = true;
+            }
+            //cambiar a modo de respuesta
             currentState = GameState.AWAITING_REPLY;
             preguntaPendiente=false;
             updateUIState();
             
         } else if (mensaje.startsWith("RESPUESTA:")) {
-            mostrarMensaje("RESPUESTA: " + mensaje.substring(10));
+            String respuesta = mensaje.substring(10);
+            mostrarMensaje("RESPUESTA: " + respuesta);
             
-            // Despues de recibir respuesta, es mi turno para preguntar
+            //manejar respuesta a pregunta final
+            if (esPreguntaFinal) {
+            if (respuesta.equals("SI")) {
+                //si responden si gane
+                SwingUtilities.invokeLater(() -> {
+                    JFrameGanador frameGan = new JFrameGanador();
+                    frameGan.setVisible(true);
+                });
+            } else {
+                //sí respondieron no se perdio
+                SwingUtilities.invokeLater(() -> {
+                    JFramePerdedor framePer = new JFramePerdedor();
+                    framePer.setVisible(true);
+                });
+            }
+            esPreguntaFinal = false;
+            disableAllControls();
+            return;
+            }
+            //despues de recibir respuesta y verificar que no sea la ultima es mi turno para pregntar
             currentState = GameState.MY_TURN;
             preguntaPendiente = false;
             updateUIState();
@@ -184,7 +228,7 @@ public class JFrameChat extends javax.swing.JFrame {
         menuPreguntas = new JPopupMenu();
         Map<String, List<String>> preguntasPorCategoria = new HashMap<>();
 
-        try (Connection conn = ConexionBD.conectar()) {
+        try (Connection conn = ConBD.conectar()) {
             String query = "SELECT categoria, valor FROM preguntas";
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -205,6 +249,12 @@ public class JFrameChat extends javax.swing.JFrame {
                 JMenu subMenu = new JMenu(categoria);
                 for (String opcion : opciones) {
                     JMenuItem item = new JMenuItem(opcion);
+                    if(categoria.equals("PREGUNTA FINAL")){
+                        item.addActionListener(e -> {
+                                esPreguntaFinal = true;
+                                esperarRespuesta = true;
+                        });
+                    }
                     //para construir la pregunta direcamente 
                     item.addActionListener(e -> enviarMensajePredefinido("TU PERSONAJE ES " + opcion + "?"));
                     subMenu.add(item);
@@ -217,6 +267,8 @@ public class JFrameChat extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+    //okay para logica del ganador, tengo pensado mostrar ya como pregunta final la adivinanza del personaje
+    //para esto necesito necesito condicional que si mandan esa pregunta y respuesta es verdadera,sale ganador sino sale perdedor
     public void setSalida(DataOutputStream salida) {
         this.salida = salida;
     }
