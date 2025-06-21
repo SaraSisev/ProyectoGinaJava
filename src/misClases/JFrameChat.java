@@ -151,11 +151,13 @@ public class JFrameChat extends javax.swing.JFrame {
                 SwingUtilities.invokeLater(() -> {
                     JFramePerdedor framePer = new JFramePerdedor();
                     framePer.setVisible(true);//se acepta que es el presonaje y perdi
+                    this.dispose();
                 });
             } else {
                 SwingUtilities.invokeLater(() -> {
                     JFrameGanador frameGan = new JFrameGanador();
                     frameGan.setVisible(true);//no es mi personaje asi que gane
+                    this.dispose();
                 });
             }
             disableAllControls();
@@ -168,16 +170,19 @@ public class JFrameChat extends javax.swing.JFrame {
     } catch (IOException e) {
         mostrarMensaje("Error al enviar respuesta");
     }
-}
+}   //utlima
     //metodo para procesar el mensaje que se recibio
     public void procesarMensajeRecibido(String mensaje) {
         if (mensaje.startsWith("PREGUNTA:")) {
             String pregunta = mensaje.substring(9);
-            mostrarMensaje("OPONENTE: " + pregunta);
             
-            //detectar pregunta final
-            if(pregunta.startsWith("TU PERSONAJE ES ") && pregunta.endsWith("?")){
-                esPreguntaFinal = true;
+            //detectar pregunta final con el marcador "FINAL"
+            if(pregunta.startsWith("FINAL:")){
+                esPreguntaFinal=true;
+                pregunta = pregunta.substring(6);
+                jTextAreaChat.append("OPNONETE: " +pregunta + "\n");
+            }else{
+                mostrarMensaje("OPONENTE: " + pregunta);
             }
             //cambiar a modo de respuesta
             currentState = GameState.AWAITING_REPLY;
@@ -195,12 +200,14 @@ public class JFrameChat extends javax.swing.JFrame {
                 SwingUtilities.invokeLater(() -> {
                     JFrameGanador frameGan = new JFrameGanador();
                     frameGan.setVisible(true);
+                    this.dispose();
                 });
             } else {
                 //sí respondieron no se perdio
                 SwingUtilities.invokeLater(() -> {
                     JFramePerdedor framePer = new JFramePerdedor();
                     framePer.setVisible(true);
+                    this.dispose();
                 });
             }
             esPreguntaFinal = false;
@@ -223,6 +230,7 @@ public class JFrameChat extends javax.swing.JFrame {
                 this.jTextAreaChat.append(mensaje + "\n");
                 });
     }
+    //ultima
     //metodo para inicializar las preguntas que tenemos en la BD ya definidas en listas que tienen sublistas
     private void inicializacionPreguntas(){
         menuPreguntas = new JPopupMenu();
@@ -241,25 +249,27 @@ public class JFrameChat extends javax.swing.JFrame {
                     .computeIfAbsent(categoria, k -> new ArrayList<>())
                     .add(valor);
             }
-
+            //ultima modificaion
             for (Map.Entry<String, List<String>> entry : preguntasPorCategoria.entrySet()) {
-                String categoria = entry.getKey();
-                List<String> opciones = entry.getValue();
+            String categoria = entry.getKey();
+            List<String> opciones = entry.getValue();
 
-                JMenu subMenu = new JMenu(categoria);
-                for (String opcion : opciones) {
-                    JMenuItem item = new JMenuItem(opcion);
-                    if(categoria.equals("PREGUNTA FINAL")){
-                        item.addActionListener(e -> {
-                                esPreguntaFinal = true;
-                                esperarRespuesta = true;
-                        });
-                    }
-                    //para construir la pregunta direcamente 
+            JMenu subMenu = new JMenu(categoria);
+            for (String opcion : opciones) {
+                JMenuItem item = new JMenuItem(opcion);
+                if(categoria.equals("PREGUNTA FINAL")){
+                    item.addActionListener(e -> {
+                        esPreguntaFinal=true;
+                        // ENVIAR CON MARCADOR ESPECIAL
+                        enviarMensajePredefinido("FINAL:¿TU PERSONAJE ES " + opcion + "?");
+                    });
+                } else {
+                    //mandar mensaje predeterminado
                     item.addActionListener(e -> enviarMensajePredefinido("TU PERSONAJE ES " + opcion + "?"));
-                    subMenu.add(item);
                 }
-                menuPreguntas.add(subMenu);
+                subMenu.add(item);
+            }
+            menuPreguntas.add(subMenu);
             }
 
         } catch (SQLException e) {
@@ -411,7 +421,7 @@ public class JFrameChat extends javax.swing.JFrame {
             }
         });
     }
-
+    //utlima
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEnviar;
     private javax.swing.JButton jButtonNo;
