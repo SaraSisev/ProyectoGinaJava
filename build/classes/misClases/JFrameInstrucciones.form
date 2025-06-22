@@ -146,7 +146,7 @@
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
                 <Property name="rows" type="int" value="5"/>
-                <Property name="text" type="java.lang.String" value="1.- Cada Jugador elige un personaje misterioso &#xa;2.- Tratar de adivinar el personaje misterioso del otro&#xa;3.- Cuando creas saber quien e, puedes adivinar.&#xa;4.- Si te quivocas pierdes bot!!"/>
+                <Property name="text" type="java.lang.String" value="1.- El jugador selecciona un rol (servidor o cliente).&#xa;2.- Introducir nombre y en caso de ser jugador ingresar la ip del servidor.&#xa;3.- Cada jugador tendr&#xe1; la oportunidad de seleccionar un personaje de tres maneras distintas:&#xa;      a) La primera opci&#xf3;n es una lista con un banco de 34 personajes, donde selecciona de la lista el nombre del personaje con el que le gustar&#xed;a jugar.&#xa;      b) La segunda opci&#xf3;n es mediante un tablero donde se puede seleccionar la imagen de la persona con la que se quiere jugar.&#xa;      c) El programa selecciona aleatoriamente el personaje.&#xa;4.-A partir de este paso comienza el juego, deber&#xe1; realizar preguntas a su oponente cuya respuesta es cerrada (si o no) y conforme sea la respuesta usted descartar&#xe1; personajes del tablero.&#xa;5.- Cuando est&#xe9; seguro de conocer el personaje del oponente, selecciona la pregunta final. Pero mucho cuidado, ya que si se equivoca el juego termina definitivamente para&#xa0;usted&#xa0;y&#xa0;pierde."/>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="null"/>
                 </Property>

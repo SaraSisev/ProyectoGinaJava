@@ -34,6 +34,7 @@ public class JFramePersonaje extends javax.swing.JFrame {
         this.tipo=tipo;
         this.nombre=nombre;
         
+        lblPersonaje.setOpaque(true);
         cambiarIcono(jButton2, ControlMusica.estaPausada()
             ? "/misClases/recursos/playBtn.png"
             : "/misClases/recursos/pauseBtn.png");
@@ -101,7 +102,6 @@ public class JFramePersonaje extends javax.swing.JFrame {
         lblPersonaje.setBackground(new java.awt.Color(36, 94, 150));
         lblPersonaje.setFont(new java.awt.Font("Tempus Sans ITC", 3, 14)); // NOI18N
         lblPersonaje.setForeground(new java.awt.Color(255, 255, 255));
-        lblPersonaje.setOpaque(true);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -124,7 +124,7 @@ public class JFramePersonaje extends javax.swing.JFrame {
                 .addGap(249, 249, 249)
                 .addComponent(Pselect, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(lblPersonaje, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblPersonaje, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -139,9 +139,12 @@ public class JFramePersonaje extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 487, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Pselect, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-                    .addComponent(lblPersonaje, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblPersonaje, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)))
                 .addContainerGap())
         );
 

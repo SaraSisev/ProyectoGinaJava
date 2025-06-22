@@ -82,7 +82,7 @@ public class JFrameInstrucciones extends javax.swing.JFrame {
         jTextArea1.setFont(new java.awt.Font("Tempus Sans ITC", 0, 14)); // NOI18N
         jTextArea1.setForeground(new java.awt.Color(255, 255, 255));
         jTextArea1.setRows(5);
-        jTextArea1.setText("1.- Cada Jugador elige un personaje misterioso \n2.- Tratar de adivinar el personaje misterioso del otro\n3.- Cuando creas saber quien e, puedes adivinar.\n4.- Si te quivocas pierdes bot!!");
+        jTextArea1.setText("1.- El jugador selecciona un rol (servidor o cliente).\n2.- Introducir nombre y en caso de ser jugador ingresar la ip del servidor.\n3.- Cada jugador tendrá la oportunidad de seleccionar un personaje de tres maneras distintas:\n      a) La primera opción es una lista con un banco de 34 personajes, donde selecciona de la lista el nombre del personaje con el que le gustaría jugar.\n      b) La segunda opción es mediante un tablero donde se puede seleccionar la imagen de la persona con la que se quiere jugar.\n      c) El programa selecciona aleatoriamente el personaje.\n4.-A partir de este paso comienza el juego, deberá realizar preguntas a su oponente cuya respuesta es cerrada (si o no) y conforme sea la respuesta usted descartará personajes del tablero.\n5.- Cuando esté seguro de conocer el personaje del oponente, selecciona la pregunta final. Pero mucho cuidado, ya que si se equivoca el juego termina definitivamente para usted y pierde.");
         jTextArea1.setBorder(null);
         jTextArea1.setOpaque(false);
         jScrollPane1.setViewportView(jTextArea1);
