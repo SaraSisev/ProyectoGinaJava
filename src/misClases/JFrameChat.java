@@ -30,6 +30,11 @@ public class JFrameChat extends javax.swing.JFrame {
     private JFrameChat() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    //registro de datos de jugadores
+    private JFrameTablero tablero;//para poder accede a los datos del frame del tablero
+    private String nombreJugador;
+    private String personajeJugador;
+    private String nombreOponente;
     
     //enumeracion con los estados de juego actuando como turnos
     private enum GameState {
@@ -39,7 +44,10 @@ public class JFrameChat extends javax.swing.JFrame {
     }
     
     //consutrcutor que recibe true si fue instanciado en el logico del servidor o false si fue en el de jugador
-    public JFrameChat(boolean isServer) {
+    public JFrameChat(boolean isServer, JFrameTablero tablero, String nombre, String personaje) {
+        this.tablero = tablero;
+        this.nombreJugador = nombre;
+        this.personajeJugador = personaje;
         initComponents();
         this.isServer = isServer;
         if (isServer) {
@@ -57,7 +65,7 @@ public class JFrameChat extends javax.swing.JFrame {
         
         inicializacionPreguntas();
     }
-
+    
     //para estar actualizando constantemente el UI segun el estado del juego
     private void updateUIState() {
         SwingUtilities.invokeLater(() -> {
@@ -141,19 +149,25 @@ public class JFrameChat extends javax.swing.JFrame {
     }
     //metodo para mandar la respuesta a la pregunta
     private void enviarRespuesta(String respuesta) {
-    try {
+    try {//ultima
         salida.writeUTF("RESPUESTA:" + respuesta);
         mostrarMensaje("YO RESPONDÍ: " + respuesta);
         
         // Manejar respuesta a pregunta final (solo para el que responde)
         if (esPreguntaFinal) {
             if (respuesta.equals("SI")) {
+                String ganador = isServer ? nombreJugador : nombreOponente;
+                String personajeGanador = isServer ? personajeJugador : "Personaje Oponente";
+                this.guardarDatos(ganador, personajeGanador);
                 SwingUtilities.invokeLater(() -> {
                     JFramePerdedor framePer = new JFramePerdedor();
                     framePer.setVisible(true);//se acepta que es el presonaje y perdi
                     this.dispose();
                 });
             } else {
+                String ganador = isServer ? nombreOponente : nombreJugador;
+                String personajeGanador = isServer ? "Personaje Oponente" : personajeJugador;
+                this.guardarDatos(ganador, personajeGanador);
                 SwingUtilities.invokeLater(() -> {
                     JFrameGanador frameGan = new JFrameGanador();
                     frameGan.setVisible(true);//no es mi personaje asi que gane
@@ -281,6 +295,32 @@ public class JFrameChat extends javax.swing.JFrame {
     //para esto necesito necesito condicional que si mandan esa pregunta y respuesta es verdadera,sale ganador sino sale perdedor
     public void setSalida(DataOutputStream salida) {
         this.salida = salida;
+    }
+    //PARTE PARA OBTENER DATOS PARA LA BASE DE DATOS
+    public void setDatosOponente(String nombre){
+        this.nombreOponente = nombre;
+    }
+    private void guardarDatos(String ganador, String personajeGanador){
+        tablero.detenerTiempo();//metodo del frame tablero para detener el tiempo al acabar partida
+        try (Connection conn = ConBD.conectar()) {
+            String sql = "INSERT INTO partidas (jugador1, jugador2, ganador, personajeGanador, fecha, duracion) VALUES (?, ?, ?, ?, NOW(), ?)";
+            
+            PreparedStatement ps = conn.prepareStatement(sql);
+            if(tablero.getTipo().equals("servidor")) {
+                ps.setString(1, tablero.getNombre());
+                ps.setString(2, nombreOponente);
+            } else {
+                ps.setString(1, nombreOponente);
+                ps.setString(2, tablero.getNombre());
+            }
+            ps.setString(3, ganador);
+            ps.setString(4, personajeGanador);
+            ps.setInt(5, tablero.getDuracionSegundos());
+            
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     /**
@@ -433,3 +473,4 @@ public class JFrameChat extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldMensajes;
     // End of variables declaration//GEN-END:variables
 }
+//ultima modifiacion
