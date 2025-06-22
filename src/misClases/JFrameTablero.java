@@ -25,6 +25,8 @@ public class JFrameTablero extends javax.swing.JFrame {
     private Timer timer;
     private int minutos;
     private int segundos;
+    private long startTime;//timepo del inicio de partida
+    private int duracionSegundos;//almacena la duracion total de la paritda
     //frame del chat para abrirlo
     private JFrameChat chat;
     private boolean timerIniciado = false;
@@ -58,7 +60,7 @@ public class JFrameTablero extends javax.swing.JFrame {
         new Thread(() -> {//permite ejecutar el codigo en paralelo sin bloquearme la interfaz
             try {
                 //instanciamos el frame del chat
-                chat = new JFrameChat(true);
+                chat = new JFrameChat(true, this, nombre, personaje);
                 //lo hacemos visible
                 chat.setVisible(true);
                 //IMPORTANTE despues de la instancia, instanciamos el server mandandole el frame
@@ -83,10 +85,10 @@ public class JFrameTablero extends javax.swing.JFrame {
             try {
                 //se pide la ip del servidor 
                 String ipServidor = JOptionPane.showInputDialog("Introduce la IP del servidor");
-                chat = new JFrameChat(false);//se instancia nuestro frame de chat
+                chat = new JFrameChat(false, this, nombre, personaje);//se instancia nuestro frame de chat
                 chat.setVisible(true);//se muestra el frame
                 //IMPORTANTE despues de la instancia ahora si instanciamos a jugador para mandare a chat
-                Jugador jugador = new Jugador(ipServidor,chat);
+                Jugador jugador = new Jugador(ipServidor,chat,nombre);
     
                 System.out.println("Iniciando como jugador");
                 
@@ -108,6 +110,7 @@ public class JFrameTablero extends javax.swing.JFrame {
         if(timerIniciado)return;//condcional para que no se ejecute el timer dos veces
         timerIniciado = true;//bandera para indicar que ya se ejecuto un timer
         System.out.println("timer ");
+        startTime = System.currentTimeMillis();//se registra el inicio
         timer = new Timer(1000, new ActionListener(){
                 public void actionPerformed(ActionEvent e){
                     segundos++;
@@ -120,6 +123,16 @@ public class JFrameTablero extends javax.swing.JFrame {
                 });
         timer.start();
     }
+    //metodo para detener el timepo de la partida
+    public void detenerTiempo(){
+        if(timer != null && timer.isRunning()){//mientras que el timer no sea nulo y se este ejecutando
+            timer.stop();//se detiene el conteo por parte del timer
+            duracionSegundos = minutos * 60 +segundos;
+        }
+    }
+    public int getDuracionSegundos(){
+        return duracionSegundos;
+    }
     public void conexionLista(){
         SwingUtilities.invokeLater(this::iniciarTiempoJuego);
     }
@@ -127,6 +140,14 @@ public class JFrameTablero extends javax.swing.JFrame {
         
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -238,3 +259,4 @@ public class JFrameTablero extends javax.swing.JFrame {
     private javax.swing.JLabel lblPersonaje;
     // End of variables declaration//GEN-END:variables
 }
+//ultima modifiacion
