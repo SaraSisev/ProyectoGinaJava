@@ -34,6 +34,10 @@ public class Servidor extends Conexion{//Se hereda de conexion para el uso de so
             }
             salidaCliente = new DataOutputStream(cs.getOutputStream());
             entradaJugador = new DataInputStream(cs.getInputStream());
+            
+            salidaCliente.writeUTF(frame.getNombre());
+            String nombreCliente = entradaJugador.readUTF();
+            frame2.setDatosOponente(nombreCliente);
             //enviar flujo de salida al JFrame
             frame2.setSalida(salidaCliente);
             new Thread(() -> {
