@@ -23,7 +23,7 @@ public class JFrameGanador extends javax.swing.JFrame {
         txtTexto.setText(
             "<html><div style='text-align: center;'>" +
             "¡Felicidades " + nombre + "!!!<br>" +
-            "Espero que te hayas divertido mucho jugando nuestro juego <3 <br>" +
+            "Espero que te hayas divertido mucho jugando nuestro juego<br>" +
             "Si quieres volver a jugar, presiona el botón <b>Jugar de Nuevo</b><br>"+
             "o si quieres regresar a la pantalla inicial presiona el botón <b>Regresar a Inicio</b>." +
             "</div></html>"
@@ -76,7 +76,7 @@ public class JFrameGanador extends javax.swing.JFrame {
 
         txtTexto.setBackground(new java.awt.Color(200, 156, 175));
         txtTexto.setFont(new java.awt.Font("Tempus Sans ITC", 2, 16)); // NOI18N
-        txtTexto.setText("jLabel2");
+        txtTexto.setText("Texto");
         txtTexto.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         txtTexto.setOpaque(true);
 
@@ -97,7 +97,7 @@ public class JFrameGanador extends javax.swing.JFrame {
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(126, 126, 126)
+                .addGap(18, 18, 18)
                 .addComponent(txtTexto)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -106,9 +106,9 @@ public class JFrameGanador extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(55, 55, 55)
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addGap(14, 14, 14)
                 .addComponent(txtTexto)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 178, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))

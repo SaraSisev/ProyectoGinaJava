@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package misClases;
 
 import java.io.DataInputStream;
@@ -14,19 +11,22 @@ import misClases.Conexion;
  *
  * @author Eliba
  */
-//Clase que representa nuestro cliente al servidor
-public class Jugador extends Conexion{
+    //Clase que representa nuestro cliente al servidor
+    public class Jugador extends Conexion{
     boolean jugando = true;//Bandera que representa que el jugador sigue jugando y asi siga mandando mensajes al servidor
     Scanner sc = new Scanner(System.in);//Variable para capturar las respuestas
     private String nombreJugador;
-//variable para pasar la informacion al frame del chat
-    private JFrameChat frame;     
-//Constructor
+    //variable para pasar la informacion al frame del chat
+    private JFrameChat frame;
+    private JFrameTablero tablero;
+    
+    //Constructor
     public Jugador() throws IOException{super("cliente");}
     //constructor que recibe la IP y el frame de chat para abrir
-    public Jugador(String ipServidor, JFrameChat frame,String nombre) throws IOException{
+    public Jugador(String ipServidor, JFrameChat frame,String nombre,JFrameTablero tablero) throws IOException{
         super("cliente",ipServidor);
         this.frame = frame;
+        this.tablero = tablero;
         this.nombreJugador = nombre;
     }
    
@@ -37,12 +37,15 @@ public class Jugador extends Conexion{
             DataInputStream entrada = new DataInputStream(cs.getInputStream());
             this.frame.setSalida(salida);
 
-            // Recibir nombre del servidor
-            String nombreServidor = entrada.readUTF();
+            // Recibir nombre y personaje del servidor
+            String nombreServidor = entrada.readUTF();       
+            String personajeServidor = entrada.readUTF();
+            
             // Enviar nombre del jugador al servidor 
             salida.writeUTF(nombreJugador);/* Aquí necesitas obtener el nombre del jugador local */
+            salida.writeUTF(tablero.getPersonaje());
             // Pasar nombre del servidor al chat
-            frame.setDatosOponente(nombreServidor);
+            frame.setDatosOponente(nombreServidor, personajeServidor);
             // -----------------------------
         
            new Thread(() -> {

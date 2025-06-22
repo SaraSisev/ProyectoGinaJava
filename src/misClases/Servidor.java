@@ -1,8 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package misClases;
+
 //ultima modificacion, funciona solo que servidor mande preguntas jugador aun no
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -35,9 +33,15 @@ public class Servidor extends Conexion{//Se hereda de conexion para el uso de so
             salidaCliente = new DataOutputStream(cs.getOutputStream());
             entradaJugador = new DataInputStream(cs.getInputStream());
             
+            
             salidaCliente.writeUTF(frame.getNombre());
+            salidaCliente.writeUTF(frame.getPersonaje());
+            
             String nombreCliente = entradaJugador.readUTF();
-            frame2.setDatosOponente(nombreCliente);
+            String personajeCliente = entradaJugador.readUTF();
+            
+            frame2.setDatosOponente(nombreCliente, personajeCliente);
+            
             //enviar flujo de salida al JFrame
             frame2.setSalida(salidaCliente);
             new Thread(() -> {

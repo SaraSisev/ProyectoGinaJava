@@ -16,7 +16,7 @@ public class JFramePerdedor extends javax.swing.JFrame {
         txtTexto.setText(
             "<html><div style='text-align: center;'>" +
             "¡Suerte para la próxima " + nombre + "!!!<br>" +
-            "Espero que te hayas divertido mucho jugando nuestro juego <3 <br>" +
+            "Espero que te hayas divertido mucho jugando nuestro juego<br>" +
             "Si quieres volver a jugar, presiona el botón <b>Jugar de Nuevo</b><br>"+
             "o si quieres regresar a la pantalla inicial presiona el botón <b>Regresar a Inicio</b>." +
             "</div></html>"
@@ -66,7 +66,7 @@ public class JFramePerdedor extends javax.swing.JFrame {
 
         txtTexto.setBackground(new java.awt.Color(200, 156, 175));
         txtTexto.setFont(new java.awt.Font("Tempus Sans ITC", 2, 16)); // NOI18N
-        txtTexto.setText("jLabel2");
+        txtTexto.setText("Texto");
         txtTexto.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         txtTexto.setOpaque(true);
 
@@ -85,7 +85,7 @@ public class JFramePerdedor extends javax.swing.JFrame {
                 .addComponent(btnInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(121, 121, 121)
+                .addGap(18, 18, 18)
                 .addComponent(txtTexto)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );

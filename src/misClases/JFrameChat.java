@@ -39,6 +39,7 @@ public class JFrameChat extends javax.swing.JFrame {
     private String nombreJugador;
     private String personajeJugador;
     private String nombreOponente;
+    private String personajeOponente;
     private String tipo;
     
     //enumeracion con los estados de juego actuando como turnos
@@ -164,12 +165,13 @@ public class JFrameChat extends javax.swing.JFrame {
         if (esPreguntaFinal) {
             if (respuesta.equals("SI")) {
                 String ganador = isServer ? nombreJugador : nombreOponente;
-                String personajeGanador = isServer ? personajeJugador : "Personaje Oponente";
+                String personajeGanador = isServer ? personajeJugador : personajeOponente;
                 this.guardarDatos(ganador, personajeGanador);
                 SwingUtilities.invokeLater(() -> {
                     JFramePerdedor framePer = new JFramePerdedor(nombreJugador, tipo);
                     framePer.setVisible(true);//se acepta que es el presonaje y perdi
                     this.dispose();
+                    tablero.dispose();
                 });
             } else {
                 String ganador = isServer ? nombreOponente : nombreJugador;
@@ -179,6 +181,7 @@ public class JFrameChat extends javax.swing.JFrame {
                     JFrameGanador frameGan = new JFrameGanador(nombreJugador, tipo);
                     frameGan.setVisible(true);//no es mi personaje asi que gane
                     this.dispose();
+                    tablero.dispose();
                 });
             }
             disableAllControls();
@@ -222,6 +225,8 @@ public class JFrameChat extends javax.swing.JFrame {
                     JFrameGanador frameGan = new JFrameGanador(nombreJugador, tipo);
                     frameGan.setVisible(true);
                     this.dispose();
+                    tablero.dispose();
+
                 });
             } else {
                 //sí respondieron no se perdio
@@ -229,6 +234,8 @@ public class JFrameChat extends javax.swing.JFrame {
                     JFramePerdedor framePer = new JFramePerdedor(nombreJugador, tipo);
                     framePer.setVisible(true);
                     this.dispose();
+                    tablero.dispose();
+
                 });
             }
             esPreguntaFinal = false;
@@ -304,8 +311,9 @@ public class JFrameChat extends javax.swing.JFrame {
         this.salida = salida;
     }
     //PARTE PARA OBTENER DATOS PARA LA BASE DE DATOS
-    public void setDatosOponente(String nombre){
+    public void setDatosOponente(String nombre, String personaje){
         this.nombreOponente = nombre;
+        this.personajeOponente = personaje;
     }
     private void guardarDatos(String ganador, String personajeGanador){
         tablero.detenerTiempo();//metodo del frame tablero para detener el tiempo al acabar partida
