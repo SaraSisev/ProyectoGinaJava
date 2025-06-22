@@ -1,12 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package misClases;
 
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -16,6 +24,9 @@ import javax.swing.Timer;
  * @author Eliba
  */
 public class JFrameTablero extends javax.swing.JFrame {
+    
+    FondoPanel fondo = new FondoPanel("/misClases/recursos/portada1.jpeg");
+    
     //atributos para recibir datos de otros JFrames
     private String nombre;//recibe los nombres del jugador
     private String personaje;//recibe el nombre del personaje escogido
@@ -33,19 +44,51 @@ public class JFrameTablero extends javax.swing.JFrame {
     /**
      * Creates new form JFrameTablero
      */
-    public JFrameTablero() {
-        initComponents();
-        
-    }
+    
     //constructor que recibe el nombre y tipo de jugador desde el frame principal
     public JFrameTablero(String nombre, String tipo, String personaje){
         initComponents();
+        
+        //setSize(750, 535);
+        
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenWidth = screenSize.width;
+        int screenHeight = screenSize.height;
+        int frameWidth = getWidth();
+        int frameHeight = getHeight();
+        setLocation(screenWidth - frameWidth, (screenHeight - frameHeight) / 2);
+
+        generarTableroPersonajes();
         this.tipo=tipo;
         this.nombre=nombre;
         this.personaje=personaje;
-        lblPersonaje.setText(personaje);
-        lblNombre.setText(nombre);
-        //iniciarTiempoJuego();
+        
+        String rutaImagen = "/misClases/recursos/personajes/" + personaje + ".png";
+        java.net.URL url = getClass().getResource(rutaImagen);
+
+        if (url != null) {
+            ImageIcon icono = new ImageIcon(url);
+            Image imagenEscalada = icono.getImage().getScaledInstance(85, 100, Image.SCALE_SMOOTH);
+            lblImg.setIcon(new ImageIcon(imagenEscalada));
+            lblImg.setText(""); // Quita texto
+        } else {
+            lblImg.setText("Imagen no encontrada");
+        }
+        
+        lblPersonaje.setText("Personaje: " + personaje);
+        lblNombre.setText("Nombre: " + nombre);
+        
+        cambiarIcono(jButton1, ControlMusica.estaPausada()
+            ? "/misClases/recursos/playBtn.png"
+            : "/misClases/recursos/pauseBtn.png");
+        
+        if (!ControlMusica.estaPausada()) {
+            ControlMusica.iniciarMusica("/misClases/recursos/MusicaInicio.wav");
+        }
+        
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        lblFecha.setText("Fecha: " + LocalDate.now().format(formato));
+
         //condicional para verificar que tipo de jugador es
         if(tipo.equals("servidor")){
             //si es el servidor iniciara el servidor con ese metodo
@@ -56,11 +99,17 @@ public class JFrameTablero extends javax.swing.JFrame {
             iniciarJugador();
         }
     }
+    
+    public JFrameTablero() {
+        initComponents();
+        
+    }
+    
     public void iniciarServidor(){
         new Thread(() -> {//permite ejecutar el codigo en paralelo sin bloquearme la interfaz
             try {
                 //instanciamos el frame del chat
-                chat = new JFrameChat(true, this, nombre, personaje);
+                chat = new JFrameChat(true, this, nombre, personaje, tipo);
                 //lo hacemos visible
                 chat.setVisible(true);
                 //IMPORTANTE despues de la instancia, instanciamos el server mandandole el frame
@@ -85,7 +134,7 @@ public class JFrameTablero extends javax.swing.JFrame {
             try {
                 //se pide la ip del servidor 
                 String ipServidor = JOptionPane.showInputDialog("Introduce la IP del servidor");
-                chat = new JFrameChat(false, this, nombre, personaje);//se instancia nuestro frame de chat
+                chat = new JFrameChat(false, this, nombre, personaje, tipo);//se instancia nuestro frame de chat
                 chat.setVisible(true);//se muestra el frame
                 //IMPORTANTE despues de la instancia ahora si instanciamos a jugador para mandare a chat
                 Jugador jugador = new Jugador(ipServidor,chat,nombre);
@@ -158,63 +207,130 @@ public class JFrameTablero extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jPanel1 = new FondoPanel("/misClases/recursos/portada1.jpeg");
         jLabelTiempo = new javax.swing.JLabel();
         lblPersonaje = new javax.swing.JLabel();
         lblFecha = new javax.swing.JLabel();
         lblNombre = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        lblImg = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
 
-        jLabelTiempo.setText("jLabel1");
+        jLabelTiempo.setFont(new java.awt.Font("Tempus Sans ITC", 2, 14)); // NOI18N
+        jLabelTiempo.setText("Tiempo");
 
+        lblPersonaje.setFont(new java.awt.Font("Tempus Sans ITC", 3, 14)); // NOI18N
         lblPersonaje.setText("Personaje");
 
-        lblFecha.setText("jLabel1");
+        lblFecha.setFont(new java.awt.Font("Tempus Sans ITC", 0, 14)); // NOI18N
+        lblFecha.setText("Fecha");
 
-        lblNombre.setText("jLabel1");
+        lblNombre.setFont(new java.awt.Font("Tempus Sans ITC", 3, 14)); // NOI18N
+        lblNombre.setText("Nombre");
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 853, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 473, Short.MAX_VALUE)
+        );
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/misClases/recursos/pauseBtn.png"))); // NOI18N
+        jButton1.setBorderPainted(false);
+        jButton1.setContentAreaFilled(false);
+        jButton1.setFocusPainted(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        lblImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/misClases/recursos/portada.jpeg"))); // NOI18N
+        lblImg.setText("jLabel1");
+        lblImg.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.black, java.awt.Color.black));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(304, Short.MAX_VALUE)
-                .addComponent(lblFecha)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabelTiempo)
-                .addGap(46, 46, 46)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblNombre)
-                    .addComponent(lblPersonaje))
-                .addGap(82, 82, 82))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblPersonaje)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(lblFecha)
+                                        .addComponent(jLabelTiempo)))
+                                .addGap(47, 47, 47))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addComponent(lblNombre))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblImg, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelTiempo)
-                    .addComponent(lblFecha)
-                    .addComponent(lblPersonaje))
-                .addGap(26, 26, 26)
-                .addComponent(lblNombre)
-                .addContainerGap(224, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblFecha)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabelTiempo)
+                        .addGap(52, 52, 52)
+                        .addComponent(lblPersonaje)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblImg, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblNombre)))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        ControlMusica.pausarReanudar();
+
+        if (ControlMusica.estaPausada()) {
+            cambiarIcono(jButton1, "/misClases/recursos/playBtn.png");
+        } else {
+            cambiarIcono(jButton1, "/misClases/recursos/pauseBtn.png");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -252,11 +368,113 @@ public class JFrameTablero extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabelTiempo;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblFecha;
+    private javax.swing.JLabel lblImg;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblPersonaje;
     // End of variables declaration//GEN-END:variables
+    
+    private void cambiarIcono(javax.swing.JButton boton, String rutaImagen) {
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource(rutaImagen));
+        Image img = originalIcon.getImage().getScaledInstance(boton.getWidth(), boton.getHeight(), Image.SCALE_SMOOTH);
+        boton.setIcon(new ImageIcon(img));
+    }
+    
+    
+    private void generarTableroPersonajes() {
+        // Paso 1: Lista de imágenes
+        List<String> imagenes = new ArrayList<>();
+        Collections.addAll(imagenes,
+            "/misClases/recursos/personajes/Alcalde Quimby.png",
+            "/misClases/recursos/personajes/Apu.png",
+            "/misClases/recursos/personajes/Barney.png",
+            "/misClases/recursos/personajes/Bart.png",
+            "/misClases/recursos/personajes/Bruja Lisa.png",
+            "/misClases/recursos/personajes/Capitan Horatio.png",
+            "/misClases/recursos/personajes/Carl.png",
+            "/misClases/recursos/personajes/Duffman.png",
+            "/misClases/recursos/personajes/Evil Flanders.png",
+            "/misClases/recursos/personajes/Funzo.png",
+            "/misClases/recursos/personajes/Gato Marge.png",
+            "/misClases/recursos/personajes/Hans Moleman.png",
+            "/misClases/recursos/personajes/Herman.png",
+            "/misClases/recursos/personajes/Heroe Milhouse.png",
+            "/misClases/recursos/personajes/Homero.png",
+            "/misClases/recursos/personajes/Kodos.png",
+            "/misClases/recursos/personajes/Krusty.png",
+            "/misClases/recursos/personajes/Lenny.png",
+            "/misClases/recursos/personajes/Lisa.png",
+            "/misClases/recursos/personajes/Maggie.png",
+            "/misClases/recursos/personajes/Marge.png",
+            "/misClases/recursos/personajes/Melvin.png",
+            "/misClases/recursos/personajes/Milhouse.png",
+            "/misClases/recursos/personajes/Moe.png",
+            "/misClases/recursos/personajes/Nick Riviera.png",
+            "/misClases/recursos/personajes/Otto.png",
+            "/misClases/recursos/personajes/Patty.png",
+            "/misClases/recursos/personajes/Payaso Rapha.png",
+            "/misClases/recursos/personajes/Pica.png",
+            "/misClases/recursos/personajes/Rasca.png",
+            "/misClases/recursos/personajes/Selma.png",
+            "/misClases/recursos/personajes/Snake.png",
+            "/misClases/recursos/personajes/Sr Burns.png",
+            "/misClases/recursos/personajes/Willie.png"     
+        );
+
+        // Paso 2: Barajar y tomar solo 24
+        Collections.shuffle(imagenes);
+        List<String> seleccionados = imagenes;
+
+        // Paso 3: Configurar el panel
+        jPanel2.removeAll();
+        jPanel2.setLayout(new GridLayout(5, 7, 20, 20));
+
+
+
+        // Paso 4: Crear y añadir los botones
+        for (String ruta : seleccionados) {
+            JButton boton = new JButton();
+
+            // Icono
+            java.net.URL url = getClass().getResource(ruta);
+            if (url != null) {
+                ImageIcon icono = new ImageIcon(url);
+                Image imagen = icono.getImage().getScaledInstance(65, 85, Image.SCALE_SMOOTH);
+                boton.setIcon(new ImageIcon(imagen));
+            } else {
+                boton.setText("No encontrada");
+            }
+
+
+            boton.setText(null); // Quita texto
+            boton.setBorderPainted(false); // Quita borde
+            boton.setContentAreaFilled(false); // Hace fondo transparente
+            boton.setFocusPainted(false); // Quita el marco cuando se enfoca
+
+            boton.addActionListener(e -> {
+                // Cargar la imagen de portada
+                java.net.URL urlPortada = getClass().getResource("/misClases/recursos/portada.jpeg");
+
+                ImageIcon iconoPortada = new ImageIcon(urlPortada);
+                Image imagenPortada = iconoPortada.getImage().getScaledInstance(65, 85, Image.SCALE_SMOOTH);
+                ImageIcon portadaIcon = new ImageIcon(imagenPortada);
+
+                // Cambiar ícono visible
+                boton.setIcon(portadaIcon);
+
+                // Establecer el ícono también como el "disabled icon"
+                boton.setDisabledIcon(portadaIcon);
+            });
+
+            jPanel2.add(boton);
+        }
+
+        jPanel2.revalidate();
+        jPanel2.repaint();
+    }
+
 }
-//ultima modifiacion

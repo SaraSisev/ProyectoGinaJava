@@ -101,6 +101,7 @@ public class JFramePersonaje1 extends javax.swing.JFrame {
         lblPersonaje.setBackground(new java.awt.Color(36, 94, 150));
         lblPersonaje.setFont(new java.awt.Font("Tempus Sans ITC", 3, 14)); // NOI18N
         lblPersonaje.setForeground(new java.awt.Color(255, 255, 255));
+        lblPersonaje.setOpaque(true);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

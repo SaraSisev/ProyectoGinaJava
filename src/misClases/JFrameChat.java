@@ -4,6 +4,7 @@
  */
 package misClases;
 //utimo avance
+import java.awt.Image;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import javax.swing.JMenu;
@@ -12,12 +13,15 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import java.sql.*;
 import java.util.*;
+import javax.swing.ImageIcon;
 
 /**
  *
  * @author Eliba
  */
 public class JFrameChat extends javax.swing.JFrame {
+    FondoPanel fondo = new FondoPanel("/misClases/recursos/tablero.jpg");
+    
     private DataOutputStream salida;
     private JPopupMenu menuPreguntas;
     //atributos para el control de preguntas 
@@ -35,6 +39,7 @@ public class JFrameChat extends javax.swing.JFrame {
     private String nombreJugador;
     private String personajeJugador;
     private String nombreOponente;
+    private String tipo;
     
     //enumeracion con los estados de juego actuando como turnos
     private enum GameState {
@@ -44,7 +49,9 @@ public class JFrameChat extends javax.swing.JFrame {
     }
     
     //consutrcutor que recibe true si fue instanciado en el logico del servidor o false si fue en el de jugador
-    public JFrameChat(boolean isServer, JFrameTablero tablero, String nombre, String personaje) {
+    public JFrameChat(boolean isServer, JFrameTablero tablero, String nombre, String personaje, String tipo) {
+        
+        this.tipo = tipo;
         this.tablero = tablero;
         this.nombreJugador = nombre;
         this.personajeJugador = personaje;
@@ -55,7 +62,7 @@ public class JFrameChat extends javax.swing.JFrame {
         } else {
             currentState = GameState.OPPONENT_TURN;//jugador inicia esperando pregunta
         }
-        
+        cambiarIcono(jButtonEnviar, "/misClases/recursos/ingresar.png");
         updateUIState();
         //configuracion inicial de listeners y los mensajes que son enviados a el textarea
         jButtonSi.addActionListener(e -> enviarRespuesta("SI"));
@@ -160,7 +167,7 @@ public class JFrameChat extends javax.swing.JFrame {
                 String personajeGanador = isServer ? personajeJugador : "Personaje Oponente";
                 this.guardarDatos(ganador, personajeGanador);
                 SwingUtilities.invokeLater(() -> {
-                    JFramePerdedor framePer = new JFramePerdedor();
+                    JFramePerdedor framePer = new JFramePerdedor(nombreJugador, tipo);
                     framePer.setVisible(true);//se acepta que es el presonaje y perdi
                     this.dispose();
                 });
@@ -169,7 +176,7 @@ public class JFrameChat extends javax.swing.JFrame {
                 String personajeGanador = isServer ? "Personaje Oponente" : personajeJugador;
                 this.guardarDatos(ganador, personajeGanador);
                 SwingUtilities.invokeLater(() -> {
-                    JFrameGanador frameGan = new JFrameGanador();
+                    JFrameGanador frameGan = new JFrameGanador(nombreJugador, tipo);
                     frameGan.setVisible(true);//no es mi personaje asi que gane
                     this.dispose();
                 });
@@ -212,14 +219,14 @@ public class JFrameChat extends javax.swing.JFrame {
             if (respuesta.equals("SI")) {
                 //si responden si gane
                 SwingUtilities.invokeLater(() -> {
-                    JFrameGanador frameGan = new JFrameGanador();
+                    JFrameGanador frameGan = new JFrameGanador(nombreJugador, tipo);
                     frameGan.setVisible(true);
                     this.dispose();
                 });
             } else {
                 //sí respondieron no se perdio
                 SwingUtilities.invokeLater(() -> {
-                    JFramePerdedor framePer = new JFramePerdedor();
+                    JFramePerdedor framePer = new JFramePerdedor(nombreJugador, tipo);
                     framePer.setVisible(true);
                     this.dispose();
                 });
@@ -315,7 +322,12 @@ public class JFrameChat extends javax.swing.JFrame {
             }
             ps.setString(3, ganador);
             ps.setString(4, personajeGanador);
-            ps.setInt(5, tablero.getDuracionSegundos());
+            int duracionTotal = tablero.getDuracionSegundos();
+            int minutos = duracionTotal / 60;
+            int segundos = duracionTotal % 60;
+            String duracionFormato = String.format("%02d:%02d", minutos, segundos);
+
+            ps.setString(5, duracionFormato);
             
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -332,7 +344,7 @@ public class JFrameChat extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jPanel1 = new FondoPanel("/misClases/recursos/tablero.jpg");
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaChat = new javax.swing.JTextArea();
         jButtonEnviar = new javax.swing.JButton();
@@ -342,82 +354,98 @@ public class JFrameChat extends javax.swing.JFrame {
         jButtonNo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
 
         jTextAreaChat.setEditable(false);
         jTextAreaChat.setColumns(20);
+        jTextAreaChat.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jTextAreaChat.setRows(5);
         jScrollPane1.setViewportView(jTextAreaChat);
 
+        jButtonEnviar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/misClases/recursos/ingresar.png"))); // NOI18N
         jButtonEnviar.setText("Enviar");
+        jButtonEnviar.setBorderPainted(false);
+        jButtonEnviar.setContentAreaFilled(false);
+        jButtonEnviar.setFocusPainted(false);
+        jButtonEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEnviarActionPerformed(evt);
+            }
+        });
 
-        jTextFieldMensajes.setText("jTextField1");
+        jTextFieldMensajes.setFont(new java.awt.Font("Tempus Sans ITC", 0, 12)); // NOI18N
+        jTextFieldMensajes.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.black, java.awt.Color.black));
 
+        jButtonPreguntas.setBackground(new java.awt.Color(226, 175, 2));
+        jButtonPreguntas.setFont(new java.awt.Font("Tempus Sans ITC", 0, 15)); // NOI18N
         jButtonPreguntas.setText("Preguntas");
+        jButtonPreguntas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.black, java.awt.Color.black));
 
+        jButtonSi.setBackground(new java.awt.Color(255, 204, 0));
+        jButtonSi.setFont(new java.awt.Font("Tempus Sans ITC", 0, 15)); // NOI18N
         jButtonSi.setText("SI");
+        jButtonSi.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.black, java.awt.Color.black));
         jButtonSi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSiActionPerformed(evt);
             }
         });
 
+        jButtonNo.setBackground(new java.awt.Color(255, 204, 0));
+        jButtonNo.setFont(new java.awt.Font("Tempus Sans ITC", 0, 15)); // NOI18N
         jButtonNo.setText("NO");
+        jButtonNo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.black, java.awt.Color.black));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(15, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jTextFieldMensajes)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonEnviar))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonPreguntas)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButtonSi)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonNo)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButtonEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButtonSi, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonNo, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonPreguntas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(15, 15, 15))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonEnviar)
-                            .addComponent(jTextFieldMensajes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(21, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButtonPreguntas)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonSi)
-                            .addComponent(jButtonNo))
-                        .addGap(82, 82, 82))))
+                .addContainerGap(42, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldMensajes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(12, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(jButtonPreguntas)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonSi)
+                    .addComponent(jButtonNo))
+                .addGap(81, 81, 81))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -426,6 +454,10 @@ public class JFrameChat extends javax.swing.JFrame {
     private void jButtonSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSiActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonSiActionPerformed
+
+    private void jButtonEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEnviarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonEnviarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -472,5 +504,10 @@ public class JFrameChat extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextAreaChat;
     private javax.swing.JTextField jTextFieldMensajes;
     // End of variables declaration//GEN-END:variables
+
+    private void cambiarIcono(javax.swing.JButton boton, String rutaImagen) {
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource(rutaImagen));
+        Image img = originalIcon.getImage().getScaledInstance(boton.getWidth(), boton.getHeight(), Image.SCALE_SMOOTH);
+        boton.setIcon(new ImageIcon(img));
+    }
 }
-//ultima modifiacion

@@ -13,8 +13,8 @@ import misClases.Servidor;
 //Clase principal que hara uso del servidor
 public class MainServidor {
     public static void main(String []args) throws IOException{
-        Servidor server = new Servidor();//se instancia una variable tipo servidor 
+        //Servidor server = new Servidor();//se instancia una variable tipo servidor 
         System.out.println("Iniciando servidor del juego");
-        server.startServer();
+        //server.startServer();
     }
 }
